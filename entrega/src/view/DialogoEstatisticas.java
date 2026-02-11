@@ -7,145 +7,160 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Diálogo que mostra estatísticas detalhadas
+ * Dialogo profissional de estatisticas - estilo moderno similar ao Wordle
  */
 public class DialogoEstatisticas extends JDialog {
 
     private Estatisticas estatisticas;
-    
+
     public DialogoEstatisticas(JFrame parent, Estatisticas estatisticas) {
-        super(parent, "Estatísticas Detalhadas", true);
-        
+        super(parent, "Estatísticas", true);
+
         this.estatisticas = estatisticas;
-        
-        setSize(450, 500);
+
+        setSize(500, 560);
         setLocationRelativeTo(parent);
         setResizable(false);
-        
+        getContentPane().setBackground(ConstantesVisuais.COR_FUNDO);
+
         criarConteudo();
     }
-    
+
     private void criarConteudo() {
+
         JPanel painel = new JPanel();
         painel.setLayout(new BoxLayout(painel, BoxLayout.Y_AXIS));
-        painel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        painel.setBackground(Color.WHITE);
-        
-        // Título
-        JLabel titulo = new JLabel("📊 SUAS ESTATÍSTICAS");
-        titulo.setFont(new Font("Arial", Font.BOLD, 24));
+        painel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+        painel.setBackground(ConstantesVisuais.COR_FUNDO);
+
+        // ===== TITULO =====
+        JLabel titulo = new JLabel("ESTATÍSTICAS");
+        titulo.setFont(ConstantesVisuais.FONTE_SUBTITULO);
+        titulo.setForeground(ConstantesVisuais.COR_TEXTO_ESCURO);
         titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         painel.add(titulo);
-        painel.add(Box.createVerticalStrut(25));
-        
-        // Estatísticas principais em cards
-        JPanel gridStats = new JPanel(new GridLayout(2, 2, 15, 15));
-        gridStats.setBackground(Color.WHITE);
-        gridStats.setMaximumSize(new Dimension(400, 180));
-        
-        gridStats.add(criarCardStat("🎮 Jogos", 
-            String.valueOf(estatisticas.getTotalPartidas())));
-        gridStats.add(criarCardStat("🏆 Vitórias", 
-            String.valueOf(estatisticas.getPartidasGanhas())));
-        gridStats.add(criarCardStat("📈 Taxa de Vitória", 
-            String.format("%.0f%%", estatisticas.getPorcentagemVitorias())));
-        gridStats.add(criarCardStat("🔥 Sequência Atual", 
-            String.valueOf(estatisticas.getSequenciaAtual())));
-        
+        painel.add(Box.createVerticalStrut(30));
+
+        // ===== GRID PRINCIPAL =====
+        JPanel gridStats = new JPanel(new GridLayout(1, 4, 15, 0));
+        gridStats.setBackground(ConstantesVisuais.COR_FUNDO);
+        gridStats.setMaximumSize(new Dimension(440, 100));
+
+        gridStats.add(criarCardStat("Jogos", String.valueOf(estatisticas.getTotalPartidas())));
+        gridStats.add(criarCardStat("Vitórias", String.valueOf(estatisticas.getPartidasGanhas())));
+        gridStats.add(criarCardStat("%", String.format("%.0f", estatisticas.getPorcentagemVitorias())));
+        gridStats.add(criarCardStat("Sequência", String.valueOf(estatisticas.getSequenciaAtual())));
+
         painel.add(gridStats);
-        painel.add(Box.createVerticalStrut(25));
-        
-        // Melhor sequência
-        JPanel panelMelhor = criarInfoRow("⭐ Melhor Sequência:", 
-            String.valueOf(estatisticas.getMelhorSequencia()));
-        painel.add(panelMelhor);
-        painel.add(Box.createVerticalStrut(10));
-        
-        // Total de derrotas
-        JPanel panelDerrotas = criarInfoRow("❌ Derrotas:", 
-            String.valueOf(estatisticas.getPartidasPerdidas()));
-        painel.add(panelDerrotas);
-        painel.add(Box.createVerticalStrut(25));
-        
-        // Distribuição de tentativas
-        JLabel lblDistribuicao = new JLabel("📊 Distribuição de Vitórias:");
-        lblDistribuicao.setFont(new Font("Arial", Font.BOLD, 14));
+        painel.add(Box.createVerticalStrut(40));
+
+        // ===== DISTRIBUICAO =====
+        JLabel lblDistribuicao = new JLabel("Distribuição de Vitórias");
+        lblDistribuicao.setFont(ConstantesVisuais.FONTE_NORMAL);
+        lblDistribuicao.setForeground(ConstantesVisuais.COR_TEXTO_ESCURO);
         lblDistribuicao.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         painel.add(lblDistribuicao);
-        painel.add(Box.createVerticalStrut(10));
-        
-        // Informação simples - sem gráfico detalhado
-        JLabel lblInfo = new JLabel("Informação disponível após implementação completa");
-        lblInfo.setFont(new Font("Arial", Font.ITALIC, 12));
-        lblInfo.setForeground(Color.GRAY);
-        lblInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        painel.add(lblInfo);
-        
-        painel.add(Box.createVerticalStrut(20));
-        
-        // Botão fechar
+        painel.add(Box.createVerticalStrut(15));
+
+        painel.add(criarGraficoDistribuicao());
+        painel.add(Box.createVerticalStrut(40));
+
+        // ===== BOTAO =====
         JButton btnFechar = new JButton("Fechar");
-        btnFechar.setFont(new Font("Arial", Font.BOLD, 14));
-        btnFechar.setBackground(new Color(46, 125, 50));
-        btnFechar.setForeground(Color.WHITE);
+        btnFechar.setFont(ConstantesVisuais.FONTE_NORMAL);
+        btnFechar.setBackground(ConstantesVisuais.COR_SUCESSO);
+        btnFechar.setForeground(ConstantesVisuais.COR_TEXTO_CLARO);
         btnFechar.setFocusPainted(false);
+        btnFechar.setBorderPainted(false);
+        btnFechar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnFechar.setPreferredSize(new Dimension(160, 38));
         btnFechar.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnFechar.setPreferredSize(new Dimension(150, 40));
         btnFechar.addActionListener(e -> dispose());
+
         painel.add(btnFechar);
-        
-        // Scroll
-        JScrollPane scroll = new JScrollPane(painel);
-        scroll.setBorder(null);
-        scroll.getVerticalScrollBar().setUnitIncrement(16);
-        
-        add(scroll);
+
+        add(painel);
     }
-    
-    /**
-     * Cria um card de estatística
-     */
+
+    // ===== CARD ESTILO WORDLE =====
     private JPanel criarCardStat(String titulo, String valor) {
+
         JPanel card = new JPanel();
-        card.setLayout(new BorderLayout(0, 5));
-        card.setBackground(new Color(248, 249, 250));
-        card.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(230, 230, 230), 1, true),
-            BorderFactory.createEmptyBorder(10, 10, 10, 10)
-        ));
-        
-        JLabel lblTitulo = new JLabel(titulo, SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Arial", Font.PLAIN, 12));
-        lblTitulo.setForeground(new Color(100, 100, 100));
-        
+        card.setLayout(new BorderLayout());
+        card.setBackground(ConstantesVisuais.COR_FUNDO);
+
         JLabel lblValor = new JLabel(valor, SwingConstants.CENTER);
-        lblValor.setFont(new Font("Arial", Font.BOLD, 28));
-        lblValor.setForeground(new Color(46, 125, 50));
-        
-        card.add(lblTitulo, BorderLayout.NORTH);
+        lblValor.setFont(ConstantesVisuais.FONTE_ESTATISTICAS);
+        lblValor.setForeground(ConstantesVisuais.COR_TEXTO_ESCURO);
+
+        JLabel lblTitulo = new JLabel(titulo, SwingConstants.CENTER);
+        lblTitulo.setFont(ConstantesVisuais.FONTE_PEQUENA);
+        lblTitulo.setForeground(Color.GRAY);
+
         card.add(lblValor, BorderLayout.CENTER);
-        
+        card.add(lblTitulo, BorderLayout.SOUTH);
+
         return card;
     }
-    
-    /**
-     * Cria uma linha de informação
-     */
-    private JPanel criarInfoRow(String label, String valor) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-        panel.setBackground(Color.WHITE);
-        panel.setMaximumSize(new Dimension(400, 30));
-        
-        JLabel lblLabel = new JLabel(label);
-        lblLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        
-        JLabel lblValor = new JLabel(valor);
-        lblValor.setFont(new Font("Arial", Font.PLAIN, 14));
-        lblValor.setForeground(new Color(46, 125, 50));
-        
-        panel.add(lblLabel);
-        panel.add(lblValor);
-        
-        return panel;
+
+    // ===== GRAFICO HORIZONTAL =====
+    private JPanel criarGraficoDistribuicao() {
+
+        JPanel painelGrafico = new JPanel();
+        painelGrafico.setLayout(new BoxLayout(painelGrafico, BoxLayout.Y_AXIS));
+        painelGrafico.setBackground(ConstantesVisuais.COR_FUNDO);
+        painelGrafico.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        int maxTentativas = ConstantesVisuais.MAX_TENTATIVAS;
+
+        int[] distribuicao = estatisticas.getDistribuicaoVitorias();
+
+        for (int i = 1; i <= maxTentativas; i++) {
+
+            int valor = 0;
+
+            if (distribuicao != null && distribuicao.length >= i) {
+                valor = distribuicao[i - 1];
+            }
+
+            painelGrafico.add(criarBarraDistribuicao(i, valor));
+            painelGrafico.add(Box.createVerticalStrut(6));
+        }
+
+        return painelGrafico;
+    }
+
+
+    private JPanel criarBarraDistribuicao(int tentativa, int valor) {
+
+        JPanel linha = new JPanel(new BorderLayout(10, 0));
+        linha.setBackground(ConstantesVisuais.COR_FUNDO);
+        linha.setMaximumSize(new Dimension(420, 25));
+
+        JLabel lblNumero = new JLabel(String.valueOf(tentativa));
+        lblNumero.setFont(ConstantesVisuais.FONTE_NORMAL);
+        lblNumero.setPreferredSize(new Dimension(20, 20));
+
+        JPanel barra = new JPanel();
+        barra.setLayout(new BorderLayout());
+        barra.setBackground(ConstantesVisuais.COR_CORRETA);
+        barra.setPreferredSize(new Dimension(Math.max(20, valor * 25), 20));
+
+        JLabel lblValor = new JLabel(String.valueOf(valor), SwingConstants.RIGHT);
+        lblValor.setForeground(ConstantesVisuais.COR_TEXTO_CLARO);
+        lblValor.setFont(ConstantesVisuais.FONTE_PEQUENA);
+        lblValor.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+
+        barra.add(lblValor, BorderLayout.EAST);
+
+        linha.add(lblNumero, BorderLayout.WEST);
+        linha.add(barra, BorderLayout.CENTER);
+
+        return linha;
     }
 }
+
+
+    

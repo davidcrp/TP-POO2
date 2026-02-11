@@ -158,6 +158,7 @@ public class MenuPrincipal extends JMenuBar {
      * Zera as estatísticas com confirmação
      */
     private void zerarEstatisticas() {
+
         int opcao = JOptionPane.showConfirmDialog(
             janelaPrincipal,
             "Tem certeza que deseja zerar todas as estatísticas?\n" +
@@ -166,17 +167,20 @@ public class MenuPrincipal extends JMenuBar {
             JOptionPane.YES_NO_OPTION,
             JOptionPane.WARNING_MESSAGE
         );
-        
+
         if (opcao == JOptionPane.YES_OPTION) {
-            // Criar novas estatísticas vazias
+
+            controlador.zerarEstatisticas();
+
             JOptionPane.showMessageDialog(
                 janelaPrincipal,
-                "Reinicie o jogo para aplicar as mudanças.",
-                "Aviso",
+                "Estatísticas zeradas com sucesso!",
+                "Sucesso",
                 JOptionPane.INFORMATION_MESSAGE
             );
         }
     }
+
     
     /**
      * Define o listener para eventos do menu

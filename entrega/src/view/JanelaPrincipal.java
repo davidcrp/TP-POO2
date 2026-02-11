@@ -18,60 +18,44 @@ import java.util.Map;
 
 /**
  * Janela principal do jogo TERMO
- * Conecta interface gráfica com o controlador
- * VERSÃO MELHORADA - Layout otimizado e responsivo
+ * VERSÃO PREMIUM - Design moderno e profissional
  */
 public class JanelaPrincipal extends JFrame
         implements ControladorJogo.JogoListener,
                    TecladoVirtual.TecladoListener,
                    KeyListener {
 
-    // controlador principal do jogo
     private ControladorJogo controlador;
-
-    // componentes principais da interface
     private PainelGrade painelGrade;
     private TecladoVirtual teclado;
     private PainelEstatisticas painelEstatisticas;
-
-    // botoes de controle
     private JButton btnNovaPartida;
     private JButton btnSair;
-
-    // label de mensagens temporarias
     private JLabel lblMensagem;
-
-    // indica se a partida esta bloqueada
     private boolean bloqueado;
 
-    // cria a janela principal
     public JanelaPrincipal(ControladorJogo controlador) {
         this.controlador = controlador;
         bloqueado = true;
-
         controlador.setListener(this);
-
+        
         configurarJanela();
         criarComponentes();
         configurarEventos();
-
+        
         painelEstatisticas.atualizar(controlador.getEstatisticas());
     }
 
-    // configuracoes basicas da janela - MELHORADO
     private void configurarJanela() {
         setTitle(ConstantesVisuais.TITULO_JOGO);
         setSize(ConstantesVisuais.LARGURA_JANELA, ConstantesVisuais.ALTURA_JANELA);
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
-        // Define cor de fundo padrão
         getContentPane().setBackground(ConstantesVisuais.COR_FUNDO);
         
-        // Adiciona barra de menu
         criarMenu();
-
+        
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -80,9 +64,6 @@ public class JanelaPrincipal extends JFrame
         });
     }
     
-    /**
-     * Cria a barra de menu
-     */
     private void criarMenu() {
         MenuPrincipal menu = new MenuPrincipal(controlador, this);
         menu.setListener(new MenuPrincipal.MenuListener() {
@@ -120,118 +101,155 @@ public class JanelaPrincipal extends JFrame
         setJMenuBar(menu);
     }
     
-    /**
-     * Reinicia a partida atual
-     */
     private void reiniciarPartida() {
         int opcao = JOptionPane.showConfirmDialog(
             this,
-            "Deseja reiniciar a partida atual?\nO progresso será perdido.",
+            "Deseja reiniciar a partida atual?\nO progresso sera perdido.",
             "Reiniciar Partida",
-            JOptionPane.YES_NO_OPTION
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE
         );
         
         if (opcao == JOptionPane.YES_OPTION) {
             painelGrade.limpar();
             teclado.resetar();
-            lblMensagem.setText(" ");
-            bloqueado = true;
+            lblMensagem.setText("");
+            bloqueado = false;
             painelEstatisticas.resetar();
+            requestFocusInWindow();
         }
     }
     
-    /**
-     * Mostra diálogo de estatísticas detalhadas
-     */
     private void mostrarEstatisticas() {
-        DialogoEstatisticas dialogo = new DialogoEstatisticas(
-            this, 
-            controlador.getEstatisticas()
-        );
+        DialogoEstatisticas dialogo = new DialogoEstatisticas(this, controlador.getEstatisticas());
         dialogo.setVisible(true);
+        requestFocusInWindow();
     }
     
-    /**
-     * Mostra diálogo de ajuda
-     */
     private void mostrarAjuda() {
         DialogoAjuda dialogo = new DialogoAjuda(this);
         dialogo.setVisible(true);
+        requestFocusInWindow();
     }
     
-    /**
-     * Mostra diálogo sobre o jogo
-     */
     private void mostrarSobre() {
         DialogoSobre dialogo = new DialogoSobre(this);
         dialogo.setVisible(true);
+        requestFocusInWindow();
     }
 
-    // cria todos os componentes da interface - MELHORADO
     private void criarComponentes() {
-        // Painel principal com BoxLayout vertical
-        JPanel painelPrincipal = new JPanel();
+        // Painel principal moderno
+        JPanel painelPrincipal = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                
+                // Gradiente sutil de fundo
+                GradientPaint gradient = new GradientPaint(
+                    0, 0, new Color(255, 255, 255),
+                    0, getHeight(), new Color(248, 250, 252)
+                );
+                g2.setPaint(gradient);
+                g2.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        
         painelPrincipal.setLayout(new BoxLayout(painelPrincipal, BoxLayout.Y_AXIS));
-        painelPrincipal.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
-        painelPrincipal.setBackground(ConstantesVisuais.COR_FUNDO);
+        painelPrincipal.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 
-        // ===== TOPO: TÍTULO =====
-        JLabel lblTitulo = new JLabel(ConstantesVisuais.TITULO_JOGO);
-        lblTitulo.setFont(ConstantesVisuais.FONTE_TITULO);
+        // TÍTULO moderno
+        JLabel lblTitulo = new JLabel(ConstantesVisuais.TITULO_JOGO) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                    RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                
+                // Sombra do texto
+                g2.setColor(new Color(0, 0, 0, 30));
+                g2.setFont(getFont());
+                FontMetrics fm = g2.getFontMetrics();
+                int x = (getWidth() - fm.stringWidth(getText())) / 2;
+                int y = ((getHeight() - fm.getHeight()) / 2) + fm.getAscent();
+                g2.drawString(getText(), x + 2, y + 2);
+                
+                // Texto principal
+                g2.setColor(getForeground());
+                g2.drawString(getText(), x, y);
+            }
+        };
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 36));
+        lblTitulo.setForeground(new Color(30, 41, 59));
         lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
-        lblTitulo.setBorder(BorderFactory.createEmptyBorder(2, 0, 6, 0));
+        lblTitulo.setBorder(BorderFactory.createEmptyBorder(5, 0, 10, 0));
 
-        // ===== ESTATÍSTICAS =====
+        // ESTATÍSTICAS
         painelEstatisticas = new PainelEstatisticas();
         painelEstatisticas.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // ===== MENSAGEM =====
-        lblMensagem = new JLabel(" ");
-        lblMensagem.setFont(ConstantesVisuais.FONTE_NORMAL);
+        // MENSAGEM moderna
+        lblMensagem = new JLabel("") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                if (getText() != null && !getText().trim().isEmpty()) {
+                    Graphics2D g2 = (Graphics2D) g;
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
+                    
+                    // Fundo arredondado
+                    g2.setColor(new Color(241, 245, 249));
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+                }
+                super.paintComponent(g);
+            }
+        };
+        lblMensagem.setFont(new Font("Arial", Font.BOLD, 13));
         lblMensagem.setAlignmentX(Component.CENTER_ALIGNMENT);
-        lblMensagem.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0));
-        lblMensagem.setPreferredSize(new Dimension(450, 25));
+        lblMensagem.setPreferredSize(new Dimension(450, 35));
+        lblMensagem.setMaximumSize(new Dimension(450, 35));
         lblMensagem.setHorizontalAlignment(SwingConstants.CENTER);
+        lblMensagem.setOpaque(false);
 
-        // ===== GRADE =====
+        // GRADE
         painelGrade = new PainelGrade();
-        
-        // Container para centralizar a grade
         JPanel containerGrade = new JPanel();
-        containerGrade.setBackground(ConstantesVisuais.COR_FUNDO);
+        containerGrade.setOpaque(false);
         containerGrade.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         containerGrade.add(painelGrade);
         containerGrade.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // ===== TECLADO =====
+        // TECLADO
         teclado = new TecladoVirtual();
         teclado.setListener(this);
         teclado.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // ===== BOTÕES =====
-        btnNovaPartida = criarBotao("Nova Partida", ConstantesVisuais.COR_SUCESSO);
-        btnSair = criarBotao("Sair", ConstantesVisuais.COR_ERRO);
+        // BOTÕES modernos
+        btnNovaPartida = criarBotaoModerno("Nova Partida", new Color(16, 185, 129), new Color(5, 150, 105));
+        btnSair = criarBotaoModerno("Sair", new Color(239, 68, 68), new Color(220, 38, 38));
 
-        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
-        painelBotoes.setBackground(ConstantesVisuais.COR_FUNDO);
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
+        painelBotoes.setOpaque(false);
         painelBotoes.add(btnNovaPartida);
         painelBotoes.add(btnSair);
         painelBotoes.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // ===== MONTAGEM FINAL =====
+        // MONTAGEM
         painelPrincipal.add(lblTitulo);
+        painelPrincipal.add(Box.createVerticalStrut(5));
         painelPrincipal.add(painelEstatisticas);
-        painelPrincipal.add(Box.createVerticalStrut(2));
+        painelPrincipal.add(Box.createVerticalStrut(10));
         painelPrincipal.add(lblMensagem);
-        painelPrincipal.add(Box.createVerticalStrut(2));
+        painelPrincipal.add(Box.createVerticalStrut(10));
         painelPrincipal.add(containerGrade);
-        painelPrincipal.add(Box.createVerticalStrut(6));
+        painelPrincipal.add(Box.createVerticalStrut(12));
         painelPrincipal.add(teclado);
-        painelPrincipal.add(Box.createVerticalStrut(8));
+        painelPrincipal.add(Box.createVerticalStrut(12));
         painelPrincipal.add(painelBotoes);
-        painelPrincipal.add(Box.createVerticalStrut(5)); // Margem inferior
+        painelPrincipal.add(Box.createVerticalGlue());
 
-        // Adiciona com scroll para garantir que tudo apareça
         JScrollPane scrollPane = new JScrollPane(painelPrincipal);
         scrollPane.setBorder(null);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -242,89 +260,90 @@ public class JanelaPrincipal extends JFrame
 
         addKeyListener(this);
         setFocusable(true);
+        setFocusTraversalKeysEnabled(false);
     }
 
-    /**
-     * Cria um botão estilizado
-     * @param texto Texto do botão
-     * @param cor Cor de fundo
-     * @return JButton configurado
-     */
-    private JButton criarBotao(String texto, Color cor) {
-        JButton btn = new JButton(texto);
-        btn.setFont(ConstantesVisuais.FONTE_NORMAL);
-        btn.setBackground(cor);
+    private JButton criarBotaoModerno(String texto, Color cor, Color corHover) {
+        JButton btn = new JButton(texto) {
+            private boolean hover = false;
+            
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                
+                // Sombra
+                g2.setColor(new Color(0, 0, 0, 20));
+                g2.fillRoundRect(0, 3, getWidth(), getHeight(), 10, 10);
+                
+                // Fundo com gradiente
+                Color c1 = hover ? corHover : cor;
+                Color c2 = c1.darker();
+                GradientPaint gradient = new GradientPaint(0, 0, c1, 0, getHeight(), c2);
+                g2.setPaint(gradient);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight() - 3, 10, 10);
+                
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        
+        btn.setFont(new Font("Arial", Font.BOLD, 13));
         btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);
-        btn.setOpaque(true);
-        btn.setPreferredSize(new Dimension(140, 35));
+        btn.setContentAreaFilled(false);
+        btn.setPreferredSize(new Dimension(130, 40));
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        // Efeito hover
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btn.setBackground(cor.darker());
+                btn.putClientProperty("hover", true);
+                btn.repaint();
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn.setBackground(cor);
+                btn.putClientProperty("hover", false);
+                btn.repaint();
             }
         });
         
         return btn;
     }
 
-    // ==================== EVENTOS ====================
-
-    /**
-     * Configura eventos dos botões principais
-     */
     private void configurarEventos() {
         btnNovaPartida.addActionListener(e -> iniciarNovaPartida());
         btnSair.addActionListener(e -> confirmarSaida());
     }
 
-    /**
-     * Inicia uma nova partida
-     */
     private void iniciarNovaPartida() {
         if (controlador.temPartidaEmAndamento()) {
             int opcao = JOptionPane.showConfirmDialog(
-                    this,
-                    "Há uma partida em andamento. Deseja iniciar uma nova?",
-                    "Nova Partida",
-                    JOptionPane.YES_NO_OPTION
+                this,
+                "Ha uma partida em andamento. Deseja iniciar uma nova?",
+                "Nova Partida",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
             );
 
-            if (opcao != JOptionPane.YES_OPTION) {
-                return;
-            }
+            if (opcao != JOptionPane.YES_OPTION) return;
         }
 
         if (controlador.iniciarNovaPartida()) {
             painelGrade.limpar();
             teclado.resetar();
-            lblMensagem.setText(" ");
+            lblMensagem.setText("");
             bloqueado = false;
             requestFocus();
         }
     }
 
-    /**
-     * Processa a tentativa atual
-     */
     private void processarTentativa() {
-        if (bloqueado) {
-            return;
-        }
+        if (bloqueado) return;
 
         String palavra = painelGrade.getPalavraAtual();
 
         if (palavra.length() < Palavra.TAMANHO_PALAVRA) {
-            mostrarMensagem(
-                ConstantesVisuais.MSG_PALAVRA_INCOMPLETA, 
-                ConstantesVisuais.COR_AVISO
-            );
+            mostrarMensagem(ConstantesVisuais.MSG_PALAVRA_INCOMPLETA, ConstantesVisuais.COR_AVISO);
             painelGrade.animarShake();
             return;
         }
@@ -334,22 +353,19 @@ public class JanelaPrincipal extends JFrame
         if (resultado == null) {
             painelGrade.animarShake();
         } else {
-            // Atualiza tentativas restantes
             int tentativasUsadas = painelGrade.getLinhaAtual() + 1;
             int tentativasRestantes = Partida.MAX_TENTATIVAS - tentativasUsadas;
             painelEstatisticas.atualizarTentativas(tentativasRestantes);
         }
     }
 
-    /**
-     * Confirma a saída do jogo
-     */
     private void confirmarSaida() {
         int opcao = JOptionPane.showConfirmDialog(
-                this,
-                "Deseja realmente sair?\n\n" + controlador.getEstatisticas(),
-                "Sair",
-                JOptionPane.YES_NO_OPTION
+            this,
+            "Deseja realmente sair?\n\n" + controlador.getEstatisticas(),
+            "Sair",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE
         );
 
         if (opcao == JOptionPane.YES_OPTION) {
@@ -359,30 +375,22 @@ public class JanelaPrincipal extends JFrame
         }
     }
 
-    /**
-     * Mostra mensagem temporária na tela
-     * @param texto Texto da mensagem
-     * @param cor Cor do texto
-     */
     private void mostrarMensagem(String texto, Color cor) {
         lblMensagem.setText(texto);
         lblMensagem.setForeground(cor);
 
-        Timer timer = new Timer(2500, e -> {
-            lblMensagem.setText(" ");
+        Timer timer = new Timer(3000, e -> {
+            lblMensagem.setText("");
             lblMensagem.setForeground(ConstantesVisuais.COR_TEXTO_ESCURO);
         });
         timer.setRepeats(false);
         timer.start();
     }
 
-    // ==================== CALLBACKS DO CONTROLADOR ====================
-
     @Override
     public void onTentativaProcessada(Palavra tentativa, int tentativasRestantes) {
         painelGrade.atualizarLinhaAtual(tentativa);
 
-        // Coleta o melhor estado de cada letra (prioridade: CORRETA > POSICAO_ERRADA > AUSENTE)
         Map<Character, Letra.Estado> melhoresEstados = new HashMap<>();
         
         for (Letra letra : tentativa.getLetras()) {
@@ -390,25 +398,20 @@ public class JanelaPrincipal extends JFrame
             Letra.Estado estadoAtual = letra.getEstado();
             Letra.Estado estadoAnterior = melhoresEstados.get(c);
             
-            // Se não tinha estado ou o novo é melhor, atualiza
             if (estadoAnterior == null) {
                 melhoresEstados.put(c, estadoAtual);
             } else if (estadoAtual == Letra.Estado.CORRETA) {
-                // CORRETA sempre prevalece
                 melhoresEstados.put(c, estadoAtual);
             } else if (estadoAtual == Letra.Estado.POSICAO_ERRADA && 
                        estadoAnterior != Letra.Estado.CORRETA) {
-                // POSICAO_ERRADA só prevalece sobre AUSENTE
                 melhoresEstados.put(c, estadoAtual);
             }
         }
         
-        // Agora atualiza o teclado com os melhores estados
         for (Map.Entry<Character, Letra.Estado> entry : melhoresEstados.entrySet()) {
             teclado.atualizarCorTecla(entry.getKey(), entry.getValue());
         }
 
-        // Atualiza estatísticas
         painelEstatisticas.atualizarTentativas(tentativasRestantes);
 
         if (controlador.temPartidaEmAndamento()) {
@@ -421,23 +424,15 @@ public class JanelaPrincipal extends JFrame
     @Override
     public void onVitoria(int tentativasUsadas) {
         bloqueado = true;
-        
-        mostrarMensagem(
-            ConstantesVisuais.MSG_VITORIA, 
-            ConstantesVisuais.COR_SUCESSO
-        );
+        mostrarMensagem(ConstantesVisuais.MSG_VITORIA, ConstantesVisuais.COR_SUCESSO);
 
-        // Animação de vitória
-        SwingUtilities.invokeLater(() -> {
-            painelGrade.animarVitoria();
-        });
+        SwingUtilities.invokeLater(() -> painelGrade.animarVitoria());
 
-        // Mensagem com delay
         Timer timer = new Timer(800, e -> {
             JOptionPane.showMessageDialog(
                 this, 
-                "Parabéns! Você venceu em " + tentativasUsadas + " tentativa(s)!",
-                "Vitória!",
+                "Parabens! Voce venceu em " + tentativasUsadas + " tentativa(s)!",
+                "Vitoria!",
                 JOptionPane.INFORMATION_MESSAGE
             );
         });
@@ -448,13 +443,8 @@ public class JanelaPrincipal extends JFrame
     @Override
     public void onDerrota(String palavraSecreta) {
         bloqueado = true;
-        
-        mostrarMensagem(
-            ConstantesVisuais.MSG_DERROTA + palavraSecreta, 
-            ConstantesVisuais.COR_ERRO
-        );
+        mostrarMensagem(ConstantesVisuais.MSG_DERROTA + palavraSecreta, ConstantesVisuais.COR_ERRO);
 
-        // Mensagem com delay
         Timer timer = new Timer(500, e -> {
             JOptionPane.showMessageDialog(
                 this, 
@@ -483,13 +473,9 @@ public class JanelaPrincipal extends JFrame
         painelEstatisticas.atualizar(estatisticas);
     }
 
-    // ==================== TECLADO VIRTUAL ====================
-
     @Override
     public void onLetraPressionada(char letra) {
-        if (!bloqueado) {
-            painelGrade.adicionarLetra(letra);
-        }
+        if (!bloqueado) painelGrade.adicionarLetra(letra);
         requestFocus();
     }
 
@@ -501,24 +487,16 @@ public class JanelaPrincipal extends JFrame
 
     @Override
     public void onBackspacePressionado() {
-        if (!bloqueado) {
-            painelGrade.removerLetra();
-        }
+        if (!bloqueado) painelGrade.removerLetra();
         requestFocus();
     }
 
-    // ==================== TECLADO FÍSICO ====================
-
     @Override
-    public void keyTyped(KeyEvent e) {
-        // Não usado
-    }
+    public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (bloqueado) {
-            return;
-        }
+        if (bloqueado) return;
 
         int keyCode = e.getKeyCode();
 
@@ -533,7 +511,5 @@ public class JanelaPrincipal extends JFrame
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-        // Não usado
-    }
+    public void keyReleased(KeyEvent e) {}
 }

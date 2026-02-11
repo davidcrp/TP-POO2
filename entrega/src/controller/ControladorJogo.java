@@ -185,6 +185,18 @@ public class ControladorJogo {
         gerenciadorArquivos.salvarEstatisticas(jogadorAtual.getEstatisticas());
     }
 
+    // zera as estatisticas do jogador e salva em arquivo
+    public void zerarEstatisticas() {
+
+        jogadorAtual.getEstatisticas().resetar();
+
+        salvarEstatisticas();
+
+        if (listener != null) {
+            listener.onEstatisticasAtualizadas(jogadorAtual.getEstatisticas());
+        }
+    }
+
     // envia uma mensagem de erro para a view
     private void notificarErro(String mensagem) {
         System.err.println("erro: " + mensagem);
