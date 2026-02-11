@@ -1,331 +1,278 @@
 package view;
 
-import model.Letra;
-import util.ConstantesVisuais;
-
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
- * Classe TecladoVirtual - Teclado virtual para entrada de letras
- * 
- * Esta classe cria um teclado QWERTY visual que permite ao jogador
- * inserir letras clicando nos botões. As teclas mudam de cor conforme
- * as letras são usadas nas tentativas.
- * 
- * @author [Seu Nome]
- * @version 1.0 - CORRIGIDO
+ * TECLADO COM CORES CORRETAS - idênticas à grade
  */
 public class TecladoVirtual extends JPanel {
     
-    // ==================== ATRIBUTOS ====================
-    
-    /** Mapa de caractere para botão */
-    private Map<Character, JButton> teclas;
-    
-    /** Listener para eventos de tecla */
+    private Map<Character, BotaoLetra> teclas;
     private TecladoListener listener;
     
-    // ==================== INTERFACE LISTENER ====================
+    // CORES IDÊNTICAS À GRADE
+    private static final Color COR_VERDE = new Color(106, 170, 100);    // Verde da grade
+    private static final Color COR_AMARELO = new Color(201, 180, 88);   // Amarelo da grade
+    private static final Color COR_CINZA_ESCURO = new Color(58, 58, 60); // Cinza escuro
+    private static final Color COR_PADRAO = new Color(129, 131, 132);   // Cinza padrão
     
-    /**
-     * Interface para notificar eventos do teclado
-     */
     public interface TecladoListener {
-        /** Chamado quando uma letra é pressionada */
         void onLetraPressionada(char letra);
-        
-        /** Chamado quando ENTER é pressionado */
         void onEnterPressionado();
-        
-        /** Chamado quando BACKSPACE é pressionado */
         void onBackspacePressionado();
     }
     
-    // ==================== CONSTRUTORES ====================
-    
-    /**
-     * Construtor padrão - cria o teclado
-     */
     public TecladoVirtual() {
         this.teclas = new HashMap<>();
-        configurarPainel();
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBackground(Color.BLACK);
+        setBorder(BorderFactory.createEmptyBorder(10, 8, 20, 8));
         criarTeclado();
     }
     
-    // ==================== CONFIGURAÇÃO ====================
-    
-    /**
-     * Configura as propriedades do painel
-     */
-    private void configurarPainel() {
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBackground(ConstantesVisuais.COR_FUNDO);
-        setBorder(BorderFactory.createEmptyBorder(
-            ConstantesVisuais.MARGEM, 
-            ConstantesVisuais.MARGEM, 
-            ConstantesVisuais.MARGEM, 
-            ConstantesVisuais.MARGEM));
-        
-        // Define altura mínima para garantir que todas as linhas apareçam
-        int alturaTotal = (ConstantesVisuais.ALTURA_TECLA * 3) + 
-                         (ConstantesVisuais.ESPACAMENTO_TECLA * 2) + 
-                         (ConstantesVisuais.MARGEM * 2);
-        setPreferredSize(new Dimension(500, alturaTotal));
-        setMinimumSize(new Dimension(500, alturaTotal));
-    }
-    
-    /**
-     * Cria as três linhas do teclado
-     */
     private void criarTeclado() {
-        // Linha 1: QWERTYUIOP
-        add(criarLinhaTeclado(ConstantesVisuais.TECLADO_LINHA1, false, false));
-        add(Box.createVerticalStrut(ConstantesVisuais.ESPACAMENTO_TECLA));
-        
-        // Linha 2: ASDFGHJKL
-        add(criarLinhaTeclado(ConstantesVisuais.TECLADO_LINHA2, false, false));
-        add(Box.createVerticalStrut(ConstantesVisuais.ESPACAMENTO_TECLA));
-        
-        // Linha 3: ENTER + ZXCVBNM + BACKSPACE
-        add(criarLinhaTeclado(ConstantesVisuais.TECLADO_LINHA3, true, true));
+        add(criarLinha1());
+        add(Box.createVerticalStrut(6));
+        add(criarLinha2());
+        add(Box.createVerticalStrut(6));
+        add(criarLinha3());
     }
     
-    /**
-     * Cria uma linha do teclado - VERSÃO CORRIGIDA
-     * 
-     * @param letras String com as letras da linha
-     * @param comEnter Se deve incluir ENTER no início
-     * @param comBackspace Se deve incluir BACKSPACE no final
-     * @return JPanel com a linha de teclas
-     */
-    private JPanel criarLinhaTeclado(String letras, boolean comEnter, boolean comBackspace) {
-        JPanel linha = new JPanel();
-        linha.setLayout(new FlowLayout(FlowLayout.CENTER, 
-            ConstantesVisuais.ESPACAMENTO_TECLA, 0));
-        linha.setBackground(ConstantesVisuais.COR_FUNDO);
+    private JPanel criarLinha1() {
+        JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 0));
+        p.setBackground(Color.BLACK);
         
-        // Define altura máxima para evitar expansão vertical
-        linha.setMaximumSize(new Dimension(
-            Integer.MAX_VALUE, 
-            ConstantesVisuais.ALTURA_TECLA + 10
-        ));
+        adicionarTecla(p, 'Q');
+        adicionarTecla(p, 'W');
+        adicionarTecla(p, 'E');
+        adicionarTecla(p, 'R');
+        adicionarTecla(p, 'T');
+        adicionarTecla(p, 'Y');
+        adicionarTecla(p, 'U');
+        adicionarTecla(p, 'I');
+        adicionarTecla(p, 'O');
+        adicionarTecla(p, 'P');
         
-        // Botão ENTER
-        if (comEnter) {
-            JButton btnEnter = criarBotaoEspecial(ConstantesVisuais.TEXTO_ENTER);
-            btnEnter.addActionListener(e -> {
-                if (listener != null) {
-                    listener.onEnterPressionado();
-                }
-            });
-            linha.add(btnEnter);
-        }
-        
-        // Botões de letras
-        for (char c : letras.toCharArray()) {
-            JButton btn = criarBotaoLetra(c);
-            teclas.put(c, btn);
-            linha.add(btn);
-        }
-        
-        // Botão BACKSPACE
-        if (comBackspace) {
-            JButton btnBackspace = criarBotaoEspecial(ConstantesVisuais.TEXTO_BACKSPACE);
-            btnBackspace.addActionListener(e -> {
-                if (listener != null) {
-                    listener.onBackspacePressionado();
-                }
-            });
-            linha.add(btnBackspace);
-        }
-        
-        return linha;
+        return p;
     }
     
-    /**
-     * Cria um botão de letra - VERSÃO CORRIGIDA
-     * 
-     * @param letra Caractere do botão
-     * @return JButton configurado
-     */
-    private JButton criarBotaoLetra(char letra) {
-        JButton btn = new JButton(String.valueOf(letra));
+    private JPanel criarLinha2() {
+        JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 0));
+        p.setBackground(Color.BLACK);
         
-        // Define tamanhos fixos
-        Dimension tamanho = new Dimension(
-            ConstantesVisuais.LARGURA_TECLA, 
-            ConstantesVisuais.ALTURA_TECLA
-        );
+        adicionarTecla(p, 'A');
+        adicionarTecla(p, 'S');
+        adicionarTecla(p, 'D');
+        adicionarTecla(p, 'F');
+        adicionarTecla(p, 'G');
+        adicionarTecla(p, 'H');
+        adicionarTecla(p, 'J');
+        adicionarTecla(p, 'K');
+        adicionarTecla(p, 'L');
         
-        btn.setPreferredSize(tamanho);
-        btn.setMinimumSize(tamanho);
-        btn.setMaximumSize(tamanho);
-        
-        // Configurações visuais
-        btn.setFont(ConstantesVisuais.FONTE_TECLADO);
-        btn.setBackground(ConstantesVisuais.COR_FUNDO_TECLADO);
-        btn.setForeground(ConstantesVisuais.COR_TEXTO_ESCURO);
-        btn.setFocusPainted(false);
-        btn.setBorderPainted(false);
-        btn.setOpaque(true);
-        
-        // Adiciona borda arredondada sutil
-        btn.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
-            BorderFactory.createEmptyBorder(2, 2, 2, 2)
-        ));
-        
-        // Adiciona ação
-        btn.addActionListener(e -> {
-            if (listener != null) {
-                listener.onLetraPressionada(letra);
-            }
+        BotaoEspecial back = new BotaoEspecial("←", 65);  // Mudado de ⌫ para ←
+        back.addActionListener(e -> {
+            if (listener != null) listener.onBackspacePressionado();
         });
+        p.add(back);
         
-        return btn;
+        return p;
     }
     
-    /**
-     * Cria um botão especial (ENTER ou BACKSPACE) - VERSÃO CORRIGIDA
-     * 
-     * @param texto Texto do botão
-     * @return JButton configurado
-     */
-    private JButton criarBotaoEspecial(String texto) {
-        JButton btn = new JButton(texto);
+    private JPanel criarLinha3() {
+        JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 0));
+        p.setBackground(Color.BLACK);
         
-        // Botões especiais são mais largos
-        int largura = (int) (ConstantesVisuais.LARGURA_TECLA * 1.5);
-        Dimension tamanho = new Dimension(largura, ConstantesVisuais.ALTURA_TECLA);
+        adicionarTecla(p, 'Z');
+        adicionarTecla(p, 'X');
+        adicionarTecla(p, 'C');
+        adicionarTecla(p, 'V');
+        adicionarTecla(p, 'B');
+        adicionarTecla(p, 'N');
+        adicionarTecla(p, 'M');
         
-        btn.setPreferredSize(tamanho);
-        btn.setMinimumSize(tamanho);
-        btn.setMaximumSize(tamanho);
+        BotaoEspecial enter = new BotaoEspecial("ENTER", 90);
+        enter.addActionListener(e -> {
+            if (listener != null) listener.onEnterPressionado();
+        });
+        p.add(enter);
         
-        btn.setFont(ConstantesVisuais.FONTE_PEQUENA);
-        btn.setBackground(ConstantesVisuais.COR_FUNDO_TECLADO);
-        btn.setForeground(ConstantesVisuais.COR_TEXTO_ESCURO);
-        btn.setFocusPainted(false);
-        btn.setBorderPainted(false);
-        btn.setOpaque(true);
-        
-        // Adiciona borda
-        btn.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
-            BorderFactory.createEmptyBorder(2, 2, 2, 2)
-        ));
-        
-        return btn;
+        return p;
     }
     
-    // ==================== MÉTODOS DE ATUALIZAÇÃO ====================
-    
-    /**
-     * Atualiza as cores das teclas baseado nas letras usadas
-     * 
-     * @param corretas Letras corretas (verde)
-     * @param posicaoErrada Letras em posição errada (amarelo)
-     * @param ausentes Letras ausentes (cinza)
-     */
-    public void atualizarCoresTeclas(Set<Character> corretas, 
-                                      Set<Character> posicaoErrada, 
-                                      Set<Character> ausentes) {
-        for (Map.Entry<Character, JButton> entry : teclas.entrySet()) {
-            char c = entry.getKey();
-            JButton btn = entry.getValue();
-            
-            // Prioridade: correta > posição errada > ausente
-            if (corretas.contains(c)) {
-                btn.setBackground(ConstantesVisuais.COR_CORRETA);
-                btn.setForeground(ConstantesVisuais.COR_TEXTO_CLARO);
-            } else if (posicaoErrada.contains(c)) {
-                btn.setBackground(ConstantesVisuais.COR_POSICAO_ERRADA);
-                btn.setForeground(ConstantesVisuais.COR_TEXTO_CLARO);
-            } else if (ausentes.contains(c)) {
-                btn.setBackground(ConstantesVisuais.COR_AUSENTE);
-                btn.setForeground(ConstantesVisuais.COR_TEXTO_CLARO);
-            }
-        }
-        
-        repaint();
+    private void adicionarTecla(JPanel painel, char letra) {
+        BotaoLetra btn = new BotaoLetra(letra);
+        btn.addActionListener(e -> {
+            if (listener != null) listener.onLetraPressionada(letra);
+        });
+        teclas.put(letra, btn);
+        painel.add(btn);
     }
     
-    /**
-     * Atualiza a cor de uma tecla específica
-     * 
-     * @param letra Caractere da tecla
-     * @param estado Estado da letra
-     */
-    public void atualizarCorTecla(char letra, Letra.Estado estado) {
-        JButton btn = teclas.get(Character.toUpperCase(letra));
+    public void atualizarCorTecla(char letra, Object estado) {
+        BotaoLetra btn = teclas.get(Character.toUpperCase(letra));
         if (btn == null) return;
         
-        // Pega a cor atual para comparação
-        Color corAtual = btn.getBackground();
+        String s = estado.toString();
+        if (s.contains(".")) s = s.substring(s.lastIndexOf(".") + 1);
         
-        // Define a nova cor baseado no estado
-        Color novaCor;
-        Color novaCorTexto;
+        Color corAtual = btn.getCor();
+        Color novaCor = null;
         
-        switch (estado) {
-            case CORRETA:
-                // Verde sempre sobrescreve qualquer cor
-                novaCor = ConstantesVisuais.COR_CORRETA;
-                novaCorTexto = ConstantesVisuais.COR_TEXTO_CLARO;
-                break;
-                
-            case POSICAO_ERRADA:
-                // Amarelo NÃO sobrescreve verde
-                if (corAtual.equals(ConstantesVisuais.COR_CORRETA)) {
-                    return; // Mantém verde
-                }
-                novaCor = ConstantesVisuais.COR_POSICAO_ERRADA;
-                novaCorTexto = ConstantesVisuais.COR_TEXTO_CLARO;
-                break;
-                
-            case AUSENTE:
-                // Cinza NÃO sobrescreve verde nem amarelo
-                if (corAtual.equals(ConstantesVisuais.COR_CORRETA) ||
-                    corAtual.equals(ConstantesVisuais.COR_POSICAO_ERRADA)) {
-                    return; // Mantém verde ou amarelo
-                }
-                novaCor = ConstantesVisuais.COR_AUSENTE;
-                novaCorTexto = ConstantesVisuais.COR_TEXTO_CLARO;
-                break;
-                
-            default:
-                return; // Estado indefinido, não atualiza
+        if ("CORRETA".equals(s)) {
+            novaCor = COR_VERDE;
+        } else if ("POSICAO_ERRADA".equals(s)) {
+            // Verde tem prioridade sobre amarelo
+            if (corAtual.equals(COR_VERDE)) {
+                return;
+            }
+            novaCor = COR_AMARELO;
+        } else if ("AUSENTE".equals(s)) {
+            // Verde e amarelo têm prioridade sobre cinza
+            if (corAtual.equals(COR_VERDE) || corAtual.equals(COR_AMARELO)) {
+                return;
+            }
+            novaCor = COR_CINZA_ESCURO;
         }
         
-        // Aplica as cores
-        btn.setBackground(novaCor);
-        btn.setForeground(novaCorTexto);
-        btn.repaint();
+        if (novaCor != null) {
+            btn.setCor(novaCor);
+        }
     }
     
-    /**
-     * Reseta todas as teclas para a cor padrão
-     */
     public void resetar() {
-        for (JButton btn : teclas.values()) {
-            btn.setBackground(ConstantesVisuais.COR_FUNDO_TECLADO);
-            btn.setForeground(ConstantesVisuais.COR_TEXTO_ESCURO);
+        for (BotaoLetra btn : teclas.values()) {
+            btn.setCor(COR_PADRAO);
         }
-        repaint();
     }
     
-    // ==================== SETTERS ====================
-    
-    /**
-     * Define o listener para eventos do teclado
-     * 
-     * @param listener Implementação de TecladoListener
-     */
     public void setListener(TecladoListener listener) {
         this.listener = listener;
+    }
+    
+    // Classe interna para botão com letra
+    class BotaoLetra extends JComponent {
+        private char letra;
+        private Color cor;
+        
+        public BotaoLetra(char letra) {
+            this.letra = letra;
+            this.cor = COR_PADRAO;
+            setPreferredSize(new Dimension(43, 58));
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            
+            addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent e) {
+                    for (java.awt.event.ActionListener al : getActionListeners()) {
+                        al.actionPerformed(new java.awt.event.ActionEvent(BotaoLetra.this, 0, ""));
+                    }
+                }
+            });
+        }
+        
+        public Color getCor() {
+            return cor;
+        }
+        
+        public void setCor(Color cor) {
+            this.cor = cor;
+            repaint();
+        }
+        
+        private java.util.List<java.awt.event.ActionListener> listeners = new java.util.ArrayList<>();
+        
+        public void addActionListener(java.awt.event.ActionListener l) {
+            listeners.add(l);
+        }
+        
+        private java.awt.event.ActionListener[] getActionListeners() {
+            return listeners.toArray(new java.awt.event.ActionListener[0]);
+        }
+        
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            
+            // Desenha fundo
+            g2.setColor(cor);
+            g2.fill(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 4, 4));
+            
+            // Desenha letra
+            g2.setColor(Color.WHITE);
+            g2.setFont(new Font("Arial", Font.BOLD, 20));
+            FontMetrics fm = g2.getFontMetrics();
+            String s = String.valueOf(letra);
+            int x = (getWidth() - fm.stringWidth(s)) / 2;
+            int y = ((getHeight() - fm.getHeight()) / 2) + fm.getAscent();
+            g2.drawString(s, x, y);
+            
+            g2.dispose();
+        }
+    }
+    
+    // Classe interna para botões especiais
+    class BotaoEspecial extends JComponent {
+        private String texto;
+        private Color cor;
+        
+        public BotaoEspecial(String texto, int largura) {
+            this.texto = texto;
+            this.cor = COR_PADRAO;
+            
+            Dimension tamanho = new Dimension(largura, 58);
+            setPreferredSize(tamanho);
+            setMinimumSize(tamanho);
+            setMaximumSize(tamanho);
+            
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            setOpaque(false);
+            
+            addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent e) {
+                    for (java.awt.event.ActionListener al : getActionListeners()) {
+                        al.actionPerformed(new java.awt.event.ActionEvent(BotaoEspecial.this, 0, ""));
+                    }
+                }
+            });
+        }
+        
+        private java.util.List<java.awt.event.ActionListener> listeners = new java.util.ArrayList<>();
+        
+        public void addActionListener(java.awt.event.ActionListener l) {
+            listeners.add(l);
+        }
+        
+        private java.awt.event.ActionListener[] getActionListeners() {
+            return listeners.toArray(new java.awt.event.ActionListener[0]);
+        }
+        
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            
+            g2.setColor(cor);
+            g2.fill(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 4, 4));
+            
+            g2.setColor(Color.WHITE);
+            g2.setFont(new Font("Arial", Font.BOLD, 18));  // Aumentado de 14 para 18
+            FontMetrics fm = g2.getFontMetrics();
+            int x = (getWidth() - fm.stringWidth(texto)) / 2;
+            int y = ((getHeight() - fm.getHeight()) / 2) + fm.getAscent();
+            g2.drawString(texto, x, y);
+            
+            g2.dispose();
+        }
+    }
+    
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, getWidth(), getHeight());
     }
 }

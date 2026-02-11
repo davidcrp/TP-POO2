@@ -5,7 +5,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
- * Dialogo "Sobre" - versão moderna e clean
+ * Diálogo "Sobre" ULTRA MODERNO - Tema escuro
  */
 public class DialogoSobre extends JDialog {
 
@@ -20,31 +20,30 @@ public class DialogoSobre extends JDialog {
     }
 
     private void criarConteudo() {
-
         JPanel painel = new JPanel();
         painel.setLayout(new BoxLayout(painel, BoxLayout.Y_AXIS));
         painel.setBorder(new EmptyBorder(30, 40, 30, 40));
-        painel.setBackground(new Color(248, 249, 250));
+        painel.setBackground(new Color(18, 18, 19));
 
-        // ===== TITULO =====
+        // TÍTULO
         JLabel titulo = new JLabel("TERMO");
         titulo.setFont(new Font("Arial", Font.BOLD, 34));
-        titulo.setForeground(new Color(30, 30, 30));
+        titulo.setForeground(Color.WHITE);
         titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         painel.add(titulo);
         painel.add(Box.createVerticalStrut(8));
 
-        // ===== SUBTITULO =====
-        JLabel versao = new JLabel("Versão 1.0");
+        // VERSÃO
+        JLabel versao = new JLabel("Versão 2.0");
         versao.setFont(new Font("Arial", Font.PLAIN, 14));
-        versao.setForeground(new Color(120, 120, 120));
+        versao.setForeground(new Color(150, 150, 150));
         versao.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         painel.add(versao);
         painel.add(Box.createVerticalStrut(25));
 
-        // ===== DESCRICAO =====
+        // DESCRIÇÃO
         JLabel descricao1 = criarTexto("Jogo de adivinhação de palavras");
         JLabel descricao2 = criarTexto("inspirado no Wordle e no Termo.");
         JLabel descricao3 = criarTexto("Desenvolvido em Java com Swing");
@@ -60,30 +59,45 @@ public class DialogoSobre extends JDialog {
 
         painel.add(Box.createVerticalStrut(25));
 
-        // ===== SEPARADOR =====
+        // SEPARADOR
         JSeparator separador = new JSeparator();
         separador.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        separador.setBackground(new Color(58, 58, 60));
+        separador.setForeground(new Color(58, 58, 60));
         painel.add(separador);
 
         painel.add(Box.createVerticalStrut(20));
 
-        // ===== CREDITOS =====
+        // CRÉDITOS
         JLabel creditos = new JLabel("© 2026 - UFOP");
         creditos.setFont(new Font("Arial", Font.PLAIN, 12));
-        creditos.setForeground(new Color(150, 150, 150));
+        creditos.setForeground(new Color(120, 120, 120));
         creditos.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         painel.add(creditos);
-
         painel.add(Box.createVerticalStrut(30));
 
-        // ===== BOTAO =====
-        JButton btnFechar = new JButton("Fechar");
+        // BOTÃO
+        JButton btnFechar = new JButton("Fechar") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+
+                g2.setColor(new Color(106, 170, 100));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
+                
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        
         btnFechar.setFont(new Font("Arial", Font.BOLD, 14));
-        btnFechar.setBackground(new Color(46, 125, 50));
         btnFechar.setForeground(Color.WHITE);
         btnFechar.setFocusPainted(false);
         btnFechar.setBorderPainted(false);
+        btnFechar.setContentAreaFilled(false);
         btnFechar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnFechar.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnFechar.setPreferredSize(new Dimension(140, 38));
@@ -92,14 +106,13 @@ public class DialogoSobre extends JDialog {
         btnFechar.addActionListener(e -> dispose());
 
         painel.add(btnFechar);
-
         add(painel);
     }
 
     private JLabel criarTexto(String texto) {
         JLabel label = new JLabel(texto);
         label.setFont(new Font("Arial", Font.PLAIN, 14));
-        label.setForeground(new Color(60, 60, 60));
+        label.setForeground(new Color(180, 180, 180));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         return label;
     }

@@ -1,166 +1,213 @@
 package view;
 
-import model.Letra;
-import util.ConstantesVisuais;
-
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
 
 /**
- * Painel visual que representa uma letra na grade
- * VERSÃO MELHORADA - Visual moderno e profissional
+ * Célula individual da grade - DESIGN PREMIUM
+ * Cantos arredondados, fundo escuro, bordas suaves
  */
 public class PainelLetra extends JPanel {
 
-    // letra exibida no painel
-    private Letra letra;
+    // Estados possíveis
+    public static final String INDEFINIDO = "INDEFINIDO";
+    public static final String CORRETA = "CORRETA";
+    public static final String POSICAO_ERRADA = "POSICAO_ERRADA";
+    public static final String AUSENTE = "AUSENTE";
 
-    // label que mostra o caractere
+    private char caractere;
+    private String estado;
+    private Object letraObject;
     private JLabel labelLetra;
-
-    // indica se o painel esta ativo
     private boolean ativo;
 
-    // cria painel vazio
-    public PainelLetra() {
-        this(new Letra());
-    }
+    // Raio dos cantos arredondados
+    private static final int RAIO_CANTOS = 8;
 
-    // cria painel com letra definida
-    public PainelLetra(Letra letra) {
-        this.letra = letra;
+    public PainelLetra() {
+        this.caractere = ' ';
+        this.estado = INDEFINIDO;
+        this.letraObject = null;
         this.ativo = false;
         configurarPainel();
         atualizarVisual();
     }
 
-    // configuracao inicial do painel - MELHORADO
     private void configurarPainel() {
-        // Define tamanhos fixos
-        Dimension tamanho = new Dimension(
-                ConstantesVisuais.TAMANHO_CELULA,
-                ConstantesVisuais.TAMANHO_CELULA
-        );
-
+        Dimension tamanho = new Dimension(62, 62);
         setPreferredSize(tamanho);
         setMinimumSize(tamanho);
         setMaximumSize(tamanho);
 
-        // Layout centralizado
         setLayout(new BorderLayout());
-        
-        // Torna o painel opaco para cores de fundo
-        setOpaque(true);
+        setOpaque(false); // Importante para cantos arredondados
+        setBorder(null); // IMPORTANTE: Sem borda padrão
 
-        // Cria label com configurações otimizadas
         labelLetra = new JLabel("", SwingConstants.CENTER);
-        labelLetra.setFont(ConstantesVisuais.FONTE_LETRA);
-        labelLetra.setOpaque(false); // Transparente para usar fundo do painel
+        labelLetra.setFont(new Font("Arial", Font.BOLD, 32));
+        labelLetra.setOpaque(false);
+        labelLetra.setBorder(null); // IMPORTANTE: Label sem borda
         
         add(labelLetra, BorderLayout.CENTER);
-
-        // Borda inicial
-        atualizarBorda(false);
     }
 
-    // atualiza cores, texto e borda conforme estado - MELHORADO
     public void atualizarVisual() {
-        // Atualiza texto
-        char c = letra.getCaractere();
-        labelLetra.setText(c == ' ' ? "" : String.valueOf(c));
+        labelLetra.setText(caractere == ' ' ? "" : String.valueOf(caractere));
+        repaint();
+    }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g.create();
+        
+        // Anti-aliasing para bordas suaves
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+        int width = getWidth();
+        int height = getHeight();
+        
         Color fundo;
         Color texto;
-        boolean temLetra = c != ' ';
+        Color borda;
+        int espessuraBorda = 2;
+        boolean temLetra = caractere != ' ';
 
-        switch (letra.getEstado()) {
+        // Define cores baseado no estado
+        switch (estado) {
             case CORRETA:
-                fundo = ConstantesVisuais.COR_CORRETA;
-                texto = ConstantesVisuais.COR_TEXTO_CLARO;
+                fundo = new Color(106, 170, 100);    // Verde IDÊNTICO ao teclado
+                texto = Color.WHITE;
+                borda = new Color(106, 170, 100);
+                espessuraBorda = 0;
                 break;
 
             case POSICAO_ERRADA:
-                fundo = ConstantesVisuais.COR_POSICAO_ERRADA;
-                texto = ConstantesVisuais.COR_TEXTO_CLARO;
+                fundo = new Color(201, 180, 88);   // Amarelo IDÊNTICO ao teclado
+                texto = Color.WHITE;
+                borda = new Color(201, 180, 88);
+                espessuraBorda = 0;
                 break;
 
             case AUSENTE:
-                fundo = ConstantesVisuais.COR_AUSENTE;
-                texto = ConstantesVisuais.COR_TEXTO_CLARO;
+                fundo = new Color(58, 58, 60);     // Cinza escuro
+                texto = Color.WHITE;
+                borda = new Color(58, 58, 60);
+                espessuraBorda = 0;
                 break;
 
             default:
-                // Se tem letra mas ainda não foi avaliada
+                // Fundo MAIS ESCURO quando vazio
                 if (temLetra) {
-                    fundo = ConstantesVisuais.COR_FUNDO;
-                    texto = ConstantesVisuais.COR_TEXTO_ESCURO;
+                    fundo = new Color(18, 18, 19);
+                    texto = Color.WHITE;
+                    borda = new Color(86, 87, 88);  // Borda cinza clara quando tem letra
                 } else {
-                    fundo = ConstantesVisuais.COR_FUNDO;
-                    texto = ConstantesVisuais.COR_TEXTO_ESCURO;
+                    fundo = new Color(18, 18, 19);  // Mesmo fundo escuro
+                    texto = Color.WHITE;
+                    
+                    // Borda especial quando ativo (cursor)
+                    if (ativo) {
+                        borda = new Color(135, 138, 140);
+                        espessuraBorda = 2;
+                    } else {
+                        borda = new Color(58, 58, 60);  // Borda mais escura quando vazio
+                    }
                 }
                 break;
         }
 
-        setBackground(fundo);
-        labelLetra.setForeground(texto);
+        // Desenha fundo com cantos arredondados
+        g2.setColor(fundo);
+        g2.fill(new RoundRectangle2D.Double(0, 0, width, height, RAIO_CANTOS, RAIO_CANTOS));
 
-        // Atualiza borda
-        atualizarBorda(temLetra);
-
-        repaint();
-    }
-
-    /**
-     * Atualiza a borda do painel baseado no estado
-     * @param temLetra Se o painel contém uma letra
-     */
-    private void atualizarBorda(boolean temLetra) {
-        Color corBorda;
-        int espessura = ConstantesVisuais.ESPESSURA_BORDA;
-
-        // Define cor da borda baseado no estado
-        if (ativo && letra.getEstado() == Letra.Estado.INDEFINIDO) {
-            // Painel ativo (cursor está aqui)
-            corBorda = ConstantesVisuais.COR_BORDA_ATIVA;
-            espessura = 3; // Borda mais grossa quando ativo
-        } else if (temLetra && letra.getEstado() == Letra.Estado.INDEFINIDO) {
-            // Tem letra mas ainda não foi submetida
-            corBorda = new Color(135, 138, 140);
-        } else {
-            // Vazio ou já avaliado
-            corBorda = ConstantesVisuais.COR_BORDA;
+        // Desenha borda com cantos arredondados
+        if (espessuraBorda > 0) {
+            g2.setColor(borda);
+            g2.setStroke(new BasicStroke(espessuraBorda));
+            g2.draw(new RoundRectangle2D.Double(
+                espessuraBorda / 2.0, 
+                espessuraBorda / 2.0, 
+                width - espessuraBorda, 
+                height - espessuraBorda, 
+                RAIO_CANTOS, 
+                RAIO_CANTOS
+            ));
         }
 
-        // Cria borda com arredondamento visual (usando padding interno)
-        setBorder(new CompoundBorder(
-            new LineBorder(corBorda, espessura),
-            new EmptyBorder(2, 2, 2, 2) // Padding interno
-        ));
+        g2.dispose();
+        
+        // Atualiza cor do texto
+        labelLetra.setForeground(texto);
+        
+        super.paintComponent(g);
     }
 
-    // ==================== GETTERS E SETTERS ====================
+    // ========== MÉTODOS PARA USO DIRETO ==========
 
-    public Letra getLetra() {
-        return letra;
-    }
-
-    public void setLetra(Letra letra) {
-        this.letra = letra;
-        atualizarVisual();
+    public char getCaractere() {
+        return caractere;
     }
 
     public void setCaractere(char c) {
-        letra.setCaractere(c);
+        this.caractere = c;
         atualizarVisual();
     }
 
-    public void setEstado(Letra.Estado estado) {
-        letra.setEstado(estado);
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
         atualizarVisual();
     }
+
+    // ========== COMPATIBILIDADE COM model.Letra ==========
+
+    public Object getLetra() {
+        return letraObject;
+    }
+
+    public void setLetra(Object letra) {
+        this.letraObject = letra;
+        
+        if (letra == null) {
+            limpar();
+            return;
+        }
+
+        try {
+            // Extrai caractere
+            Object caracterObj = letra.getClass().getMethod("getCaractere").invoke(letra);
+            if (caracterObj instanceof Character) {
+                this.caractere = (Character) caracterObj;
+            }
+
+            // Extrai estado
+            Object estadoObj = letra.getClass().getMethod("getEstado").invoke(letra);
+            String estadoStr = estadoObj.toString();
+            
+            // Remove prefixo enum
+            if (estadoStr.contains(".")) {
+                estadoStr = estadoStr.substring(estadoStr.lastIndexOf(".") + 1);
+            }
+            
+            this.estado = estadoStr;
+            
+        } catch (Exception e) {
+            System.err.println("Aviso: Erro ao processar letra - " + e.getMessage());
+        }
+
+        atualizarVisual();
+    }
+
+    public void setLetraObject(Object letra) {
+        setLetra(letra);
+    }
+
+    // ========== MÉTODOS COMUNS ==========
 
     public boolean isAtivo() {
         return ativo;
@@ -171,40 +218,16 @@ public class PainelLetra extends JPanel {
         atualizarVisual();
     }
 
-    // ==================== MÉTODOS AUXILIARES ====================
-
-    /**
-     * Limpa o painel completamente
-     */
     public void limpar() {
-        letra = new Letra();
+        caractere = ' ';
+        estado = INDEFINIDO;
+        letraObject = null;
         ativo = false;
+        setBorder(null); // IMPORTANTE: Remove qualquer borda
         atualizarVisual();
     }
 
-    /**
-     * Verifica se o painel está vazio
-     */
     public boolean isVazio() {
-        return letra.getCaractere() == ' ';
-    }
-
-    /**
-     * Override para melhor renderização
-     */
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        
-        // Ativa antialiasing para texto mais suave
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(
-            RenderingHints.KEY_TEXT_ANTIALIASING,
-            RenderingHints.VALUE_TEXT_ANTIALIAS_ON
-        );
-        g2d.setRenderingHint(
-            RenderingHints.KEY_RENDERING,
-            RenderingHints.VALUE_RENDER_QUALITY
-        );
+        return caractere == ' ';
     }
 }

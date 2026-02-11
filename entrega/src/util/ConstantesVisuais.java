@@ -87,25 +87,25 @@ public final class ConstantesVisuais {
     // ==================== DIMENSÕES DA INTERFACE ====================
 
     /** Tamanho da célula de letra (quadrado) */
-    public static final int TAMANHO_CELULA = 62;
+    public static final int TAMANHO_CELULA = 56;
 
     /** Espaço entre células da grade */
-    public static final int ESPACAMENTO_CELULA = 5;
+    public static final int ESPACAMENTO_CELULA = 4;
 
     /** Largura das teclas do teclado virtual */
-    public static final int LARGURA_TECLA = 43;
+    public static final int LARGURA_TECLA = 40;
 
     /** Altura das teclas do teclado virtual */
-    public static final int ALTURA_TECLA = 58;
+    public static final int ALTURA_TECLA = 52;
 
     /** Espaço entre teclas do teclado */
-    public static final int ESPACAMENTO_TECLA = 6;
+    public static final int ESPACAMENTO_TECLA = 5;
 
     /** Largura da janela principal */
     public static final int LARGURA_JANELA = 540;
 
     /** Altura da janela principal */
-    public static final int ALTURA_JANELA = 950;
+    public static final int ALTURA_JANELA = 820;
 
     /** Margem padrão da interface */
     public static final int MARGEM = 10;
@@ -142,7 +142,8 @@ public final class ConstantesVisuais {
     public static final String TEXTO_ENTER = "ENTER";
 
     /** Símbolo do botão BACKSPACE */
-    public static final String TEXTO_BACKSPACE = "⌫";
+    public static final String TEXTO_BACKSPACE = "DEL";
+
 
     // ==================== TEXTOS PADRÃO DA INTERFACE ====================
 

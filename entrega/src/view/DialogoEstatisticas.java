@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Dialogo profissional de estatisticas - estilo moderno similar ao Wordle
+ * Diálogo de Estatísticas ULTRA MODERNO - Tema escuro
  */
 public class DialogoEstatisticas extends JDialog {
 
@@ -21,44 +21,43 @@ public class DialogoEstatisticas extends JDialog {
         setSize(500, 560);
         setLocationRelativeTo(parent);
         setResizable(false);
-        getContentPane().setBackground(ConstantesVisuais.COR_FUNDO);
+        getContentPane().setBackground(new Color(18, 18, 19));
 
         criarConteudo();
     }
 
     private void criarConteudo() {
-
         JPanel painel = new JPanel();
         painel.setLayout(new BoxLayout(painel, BoxLayout.Y_AXIS));
         painel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
-        painel.setBackground(ConstantesVisuais.COR_FUNDO);
+        painel.setBackground(new Color(18, 18, 19));
 
-        // ===== TITULO =====
+        // TÍTULO
         JLabel titulo = new JLabel("ESTATÍSTICAS");
-        titulo.setFont(ConstantesVisuais.FONTE_SUBTITULO);
-        titulo.setForeground(ConstantesVisuais.COR_TEXTO_ESCURO);
+        titulo.setFont(new Font("Arial", Font.BOLD, 24));
+        titulo.setForeground(Color.WHITE);
         titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         painel.add(titulo);
         painel.add(Box.createVerticalStrut(30));
 
-        // ===== GRID PRINCIPAL =====
+        // GRID DE ESTATÍSTICAS
         JPanel gridStats = new JPanel(new GridLayout(1, 4, 15, 0));
-        gridStats.setBackground(ConstantesVisuais.COR_FUNDO);
+        gridStats.setBackground(new Color(18, 18, 19));
         gridStats.setMaximumSize(new Dimension(440, 100));
 
         gridStats.add(criarCardStat("Jogos", String.valueOf(estatisticas.getTotalPartidas())));
         gridStats.add(criarCardStat("Vitórias", String.valueOf(estatisticas.getPartidasGanhas())));
-        gridStats.add(criarCardStat("%", String.format("%.0f", estatisticas.getPorcentagemVitorias())));
+        gridStats.add(criarCardStat("Taxa", String.format("%.0f%%", estatisticas.getPorcentagemVitorias())));
         gridStats.add(criarCardStat("Sequência", String.valueOf(estatisticas.getSequenciaAtual())));
 
         painel.add(gridStats);
         painel.add(Box.createVerticalStrut(40));
 
-        // ===== DISTRIBUICAO =====
+        // DISTRIBUIÇÃO DE VITÓRIAS
         JLabel lblDistribuicao = new JLabel("Distribuição de Vitórias");
-        lblDistribuicao.setFont(ConstantesVisuais.FONTE_NORMAL);
-        lblDistribuicao.setForeground(ConstantesVisuais.COR_TEXTO_ESCURO);
+        lblDistribuicao.setFont(new Font("Arial", Font.BOLD, 16));
+        lblDistribuicao.setForeground(Color.WHITE);
         lblDistribuicao.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         painel.add(lblDistribuicao);
@@ -67,37 +66,48 @@ public class DialogoEstatisticas extends JDialog {
         painel.add(criarGraficoDistribuicao());
         painel.add(Box.createVerticalStrut(40));
 
-        // ===== BOTAO =====
-        JButton btnFechar = new JButton("Fechar");
-        btnFechar.setFont(ConstantesVisuais.FONTE_NORMAL);
-        btnFechar.setBackground(ConstantesVisuais.COR_SUCESSO);
-        btnFechar.setForeground(ConstantesVisuais.COR_TEXTO_CLARO);
+        // BOTÃO FECHAR
+        JButton btnFechar = new JButton("Fechar") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+
+                g2.setColor(new Color(106, 170, 100));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
+                
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        
+        btnFechar.setFont(new Font("Arial", Font.BOLD, 15));
+        btnFechar.setForeground(Color.WHITE);
         btnFechar.setFocusPainted(false);
         btnFechar.setBorderPainted(false);
+        btnFechar.setContentAreaFilled(false);
         btnFechar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnFechar.setPreferredSize(new Dimension(160, 38));
         btnFechar.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnFechar.addActionListener(e -> dispose());
 
         painel.add(btnFechar);
-
         add(painel);
     }
 
-    // ===== CARD ESTILO WORDLE =====
     private JPanel criarCardStat(String titulo, String valor) {
-
         JPanel card = new JPanel();
         card.setLayout(new BorderLayout());
-        card.setBackground(ConstantesVisuais.COR_FUNDO);
+        card.setBackground(new Color(18, 18, 19));
 
         JLabel lblValor = new JLabel(valor, SwingConstants.CENTER);
-        lblValor.setFont(ConstantesVisuais.FONTE_ESTATISTICAS);
-        lblValor.setForeground(ConstantesVisuais.COR_TEXTO_ESCURO);
+        lblValor.setFont(new Font("Arial", Font.BOLD, 32));
+        lblValor.setForeground(Color.WHITE);
 
         JLabel lblTitulo = new JLabel(titulo, SwingConstants.CENTER);
-        lblTitulo.setFont(ConstantesVisuais.FONTE_PEQUENA);
-        lblTitulo.setForeground(Color.GRAY);
+        lblTitulo.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblTitulo.setForeground(new Color(150, 150, 150));
 
         card.add(lblValor, BorderLayout.CENTER);
         card.add(lblTitulo, BorderLayout.SOUTH);
@@ -105,22 +115,17 @@ public class DialogoEstatisticas extends JDialog {
         return card;
     }
 
-    // ===== GRAFICO HORIZONTAL =====
     private JPanel criarGraficoDistribuicao() {
-
         JPanel painelGrafico = new JPanel();
         painelGrafico.setLayout(new BoxLayout(painelGrafico, BoxLayout.Y_AXIS));
-        painelGrafico.setBackground(ConstantesVisuais.COR_FUNDO);
+        painelGrafico.setBackground(new Color(18, 18, 19));
         painelGrafico.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        int maxTentativas = ConstantesVisuais.MAX_TENTATIVAS;
-
+        int maxTentativas = 6;
         int[] distribuicao = estatisticas.getDistribuicaoVitorias();
 
         for (int i = 1; i <= maxTentativas; i++) {
-
             int valor = 0;
-
             if (distribuicao != null && distribuicao.length >= i) {
                 valor = distribuicao[i - 1];
             }
@@ -132,26 +137,25 @@ public class DialogoEstatisticas extends JDialog {
         return painelGrafico;
     }
 
-
     private JPanel criarBarraDistribuicao(int tentativa, int valor) {
-
         JPanel linha = new JPanel(new BorderLayout(10, 0));
-        linha.setBackground(ConstantesVisuais.COR_FUNDO);
+        linha.setBackground(new Color(18, 18, 19));
         linha.setMaximumSize(new Dimension(420, 25));
 
         JLabel lblNumero = new JLabel(String.valueOf(tentativa));
-        lblNumero.setFont(ConstantesVisuais.FONTE_NORMAL);
+        lblNumero.setFont(new Font("Arial", Font.BOLD, 14));
+        lblNumero.setForeground(Color.WHITE);
         lblNumero.setPreferredSize(new Dimension(20, 20));
 
         JPanel barra = new JPanel();
         barra.setLayout(new BorderLayout());
-        barra.setBackground(ConstantesVisuais.COR_CORRETA);
-        barra.setPreferredSize(new Dimension(Math.max(20, valor * 25), 20));
+        barra.setBackground(new Color(106, 170, 100));
+        barra.setPreferredSize(new Dimension(Math.max(30, valor * 25), 25));
 
         JLabel lblValor = new JLabel(String.valueOf(valor), SwingConstants.RIGHT);
-        lblValor.setForeground(ConstantesVisuais.COR_TEXTO_CLARO);
-        lblValor.setFont(ConstantesVisuais.FONTE_PEQUENA);
-        lblValor.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        lblValor.setForeground(Color.WHITE);
+        lblValor.setFont(new Font("Arial", Font.BOLD, 13));
+        lblValor.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8));
 
         barra.add(lblValor, BorderLayout.EAST);
 
@@ -161,6 +165,3 @@ public class DialogoEstatisticas extends JDialog {
         return linha;
     }
 }
-
-
-    
