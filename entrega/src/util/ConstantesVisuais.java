@@ -3,170 +3,185 @@ package util;
 import java.awt.Color;
 import java.awt.Font;
 
-/**
- * Classe utilitária que centraliza cores, fontes e dimensões da interface
- * VERSÃO OTIMIZADA - Valores ajustados para layout perfeito
+/*
+Matheus Cardoso de Araújo 24.1.4033
+Pedro Souza Goularte 24.2.4084
+Pedro Henrique Boseja Carolino Barbosa 24.2.4092
+David Cristian de Paula Rodrigues 24.2.4094
  */
+
+// classe utilitaria que guarda todas as constantes visuais do jogo
+// nao pode ser instanciada
 public final class ConstantesVisuais {
 
-    // Impede a instanciação da classe
+    // impede criacao de objetos dessa classe
     private ConstantesVisuais() {
-        throw new UnsupportedOperationException("Classe utilitária não pode ser instanciada");
+        throw new UnsupportedOperationException(
+                "Classe utilitária não pode ser instanciada");
     }
 
     // ==================== CORES PRINCIPAIS ====================
-    // Estilo Termo / Wordle oficial
 
-    /** Letra na posição correta (verde) */
+    // cor verde quando a letra esta correta
     public static final Color COR_CORRETA = new Color(106, 170, 100);
 
-    /** Letra existente em posição errada (amarelo) */
+    // cor amarela quando letra existe mas esta na posicao errada
     public static final Color COR_POSICAO_ERRADA = new Color(201, 180, 88);
 
-    /** Letra ausente na palavra (cinza escuro) */
+    // cor cinza escuro quando letra nao existe na palavra
     public static final Color COR_AUSENTE = new Color(120, 124, 126);
 
-    /** Célula vazia ou indefinida (cinza claro) */
+    // cor cinza claro para celulas vazias
     public static final Color COR_INDEFINIDO = new Color(211, 214, 218);
 
-    /** Fundo padrão da interface (branco) */
+    // fundo principal da interface
     public static final Color COR_FUNDO = new Color(255, 255, 255);
 
-    /** Fundo do teclado virtual (cinza médio) */
+    // fundo do teclado virtual
     public static final Color COR_FUNDO_TECLADO = new Color(209, 213, 219);
 
-    /** Cor do texto em células coloridas (branco) */
+    // texto branco (usado em celulas coloridas)
     public static final Color COR_TEXTO_CLARO = Color.WHITE;
 
-    /** Cor do texto em células claras (preto) */
+    // texto preto (usado em fundos claros)
     public static final Color COR_TEXTO_ESCURO = Color.BLACK;
 
-    /** Borda padrão das células (cinza claro) */
+    // borda padrao das celulas
     public static final Color COR_BORDA = new Color(211, 214, 218);
 
-    /** Borda da célula ativa (cinza médio escuro) */
+    // borda quando celula esta ativa
     public static final Color COR_BORDA_ATIVA = new Color(135, 138, 140);
 
     // ==================== CORES AUXILIARES ====================
 
-    /** Cor usada para mensagens de sucesso (verde escuro) */
+    // cor verde para mensagens de sucesso
     public static final Color COR_SUCESSO = new Color(46, 125, 50);
 
-    /** Cor usada para mensagens de erro (vermelho) */
+    // cor vermelha para mensagens de erro
     public static final Color COR_ERRO = new Color(211, 47, 47);
 
-    /** Cor usada para avisos (laranja) */
+    // cor laranja para avisos
     public static final Color COR_AVISO = new Color(237, 108, 2);
 
-    /** Cor usada para informações (azul) */
+    // cor azul para informacoes
     public static final Color COR_INFO = new Color(33, 150, 243);
 
     // ==================== FONTES ====================
 
-    /** Fonte principal das letras do jogo (grande e bold) */
-    public static final Font FONTE_LETRA = new Font("Arial", Font.BOLD, 32);
+    // fonte principal das letras do jogo
+    public static final Font FONTE_LETRA =
+            new Font("Arial", Font.BOLD, 32);
 
-    /** Fonte do teclado virtual (média e bold) */
-    public static final Font FONTE_TECLADO = new Font("Arial", Font.BOLD, 14);
+    // fonte usada no teclado virtual
+    public static final Font FONTE_TECLADO =
+            new Font("Arial", Font.BOLD, 14);
 
-    /** Fonte de títulos (grande e bold) */
-    public static final Font FONTE_TITULO = new Font("Arial", Font.BOLD, 32);
+    // fonte usada em titulos grandes
+    public static final Font FONTE_TITULO =
+            new Font("Arial", Font.BOLD, 32);
 
-    /** Fonte de subtítulos (média e bold) */
-    public static final Font FONTE_SUBTITULO = new Font("Arial", Font.BOLD, 18);
+    // fonte usada em subtitulos
+    public static final Font FONTE_SUBTITULO =
+            new Font("Arial", Font.BOLD, 18);
 
-    /** Fonte de texto comum (normal) */
-    public static final Font FONTE_NORMAL = new Font("Arial", Font.PLAIN, 14);
+    // fonte padrao de texto normal
+    public static final Font FONTE_NORMAL =
+            new Font("Arial", Font.PLAIN, 14);
 
-    /** Fonte usada nas estatísticas (grande e bold) */
-    public static final Font FONTE_ESTATISTICAS = new Font("Arial", Font.BOLD, 20);
+    // fonte usada nas estatisticas
+    public static final Font FONTE_ESTATISTICAS =
+            new Font("Arial", Font.BOLD, 20);
 
-    /** Fonte pequena para labels (pequena) */
-    public static final Font FONTE_PEQUENA = new Font("Arial", Font.PLAIN, 11);
+    // fonte pequena para labels menores
+    public static final Font FONTE_PEQUENA =
+            new Font("Arial", Font.PLAIN, 11);
 
-    // ==================== DIMENSÕES DA INTERFACE ====================
+    // ==================== DIMENSOES ====================
 
-    /** Tamanho da célula de letra (quadrado) */
+    // tamanho do quadrado de cada letra
     public static final int TAMANHO_CELULA = 56;
 
-    /** Espaço entre células da grade */
+    // espaco entre celulas da grade
     public static final int ESPACAMENTO_CELULA = 4;
 
-    /** Largura das teclas do teclado virtual */
+    // largura das teclas do teclado virtual
     public static final int LARGURA_TECLA = 40;
 
-    /** Altura das teclas do teclado virtual */
+    // altura das teclas
     public static final int ALTURA_TECLA = 52;
 
-    /** Espaço entre teclas do teclado */
+    // espaco entre teclas
     public static final int ESPACAMENTO_TECLA = 5;
 
-    /** Largura da janela principal */
+    // largura da janela principal
     public static final int LARGURA_JANELA = 540;
 
-    /** Altura da janela principal */
+    // altura da janela principal
     public static final int ALTURA_JANELA = 820;
 
-    /** Margem padrão da interface */
+    // margem padrao da interface
     public static final int MARGEM = 10;
 
-    /** Espessura da borda das células */
+    // espessura da borda das celulas
     public static final int ESPESSURA_BORDA = 2;
 
-    // ==================== CONFIGURAÇÕES DE ANIMAÇÃO ====================
+    // ==================== ANIMACOES ====================
 
-    /** Duração da animação de flip (ms) */
+    // duracao da animacao de flip
     public static final int DURACAO_FLIP = 250;
 
-    /** Duração da animação de shake (ms) */
+    // duracao da animacao de shake
     public static final int DURACAO_SHAKE = 400;
 
-    /** Duração da animação de bounce (ms) */
+    // duracao da animacao de bounce
     public static final int DURACAO_BOUNCE = 100;
 
-    /** Delay entre animação de letras (ms) */
+    // delay entre animacao de cada letra
     public static final int DELAY_LETRA = 100;
 
-    // ==================== LAYOUT DO TECLADO VIRTUAL ====================
+    // ==================== TECLADO ====================
 
-    /** Primeira linha do teclado QWERTY */
+    // primeira linha do teclado qwerty
     public static final String TECLADO_LINHA1 = "QWERTYUIOP";
 
-    /** Segunda linha do teclado QWERTY */
+    // segunda linha
     public static final String TECLADO_LINHA2 = "ASDFGHJKL";
 
-    /** Terceira linha do teclado QWERTY */
+    // terceira linha
     public static final String TECLADO_LINHA3 = "ZXCVBNM";
 
-    /** Texto do botão ENTER */
+    // texto do botao enter
     public static final String TEXTO_ENTER = "ENTER";
 
-    /** Símbolo do botão BACKSPACE */
+    // texto do botao apagar
     public static final String TEXTO_BACKSPACE = "DEL";
 
+    // ==================== TEXTOS PADRAO ====================
 
-    // ==================== TEXTOS PADRÃO DA INTERFACE ====================
-
-    /** Título principal do jogo */
+    // titulo principal do jogo
     public static final String TITULO_JOGO = "TERMO";
 
-    /** Mensagem de vitória */
-    public static final String MSG_VITORIA = "Parabéns! Você acertou!";
+    // mensagem exibida quando vence
+    public static final String MSG_VITORIA =
+            "Parabéns! Você acertou!";
 
-    /** Mensagem de derrota (palavra será concatenada) */
-    public static final String MSG_DERROTA = "Que pena! A palavra era: ";
+    // mensagem exibida quando perde
+    public static final String MSG_DERROTA =
+            "Que pena! A palavra era: ";
 
-    /** Mensagem quando palavra não existe no dicionário */
-    public static final String MSG_PALAVRA_INVALIDA = "Palavra não encontrada no dicionário";
+    // mensagem quando palavra nao existe
+    public static final String MSG_PALAVRA_INVALIDA =
+            "Palavra não encontrada no dicionário";
 
-    /** Mensagem quando palavra está incompleta */
-    public static final String MSG_PALAVRA_INCOMPLETA = "Complete a palavra com 5 letras";
+    // mensagem quando palavra esta incompleta
+    public static final String MSG_PALAVRA_INCOMPLETA =
+            "Complete a palavra com 5 letras";
 
-    // ==================== VALIDAÇÕES E LIMITES ====================
+    // ==================== LIMITES DO JOGO ====================
 
-    /** Número de letras em cada palavra */
+    // quantidade de letras por palavra
     public static final int TAMANHO_PALAVRA = 5;
 
-    /** Número máximo de tentativas */
+    // numero maximo de tentativas
     public static final int MAX_TENTATIVAS = 6;
 }

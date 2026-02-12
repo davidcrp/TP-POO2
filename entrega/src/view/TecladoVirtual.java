@@ -6,9 +6,14 @@ import java.awt.geom.RoundRectangle2D;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * TECLADO COM CORES CORRETAS - idênticas à grade
+/*
+Matheus Cardoso de Araújo 24.1.4033
+Pedro Souza Goularte 24.2.4084
+Pedro Henrique Boseja Carolino Barbosa 24.2.4092
+David Cristian de Paula Rodrigues 24.2.4094
  */
+
+
 public class TecladoVirtual extends JPanel {
     
     private Map<Character, BotaoLetra> teclas;
@@ -74,10 +79,11 @@ public class TecladoVirtual extends JPanel {
         adicionarTecla(p, 'K');
         adicionarTecla(p, 'L');
         
-        BotaoEspecial back = new BotaoEspecial("←", 65);  // Mudado de ⌫ para ←
+        BotaoEspecial back = new BotaoEspecial("DEL", 65);
         back.addActionListener(e -> {
             if (listener != null) listener.onBackspacePressionado();
         });
+        back.setPreferredSize(new Dimension(65, 55));
         p.add(back);
         
         return p;
@@ -162,7 +168,7 @@ public class TecladoVirtual extends JPanel {
         public BotaoLetra(char letra) {
             this.letra = letra;
             this.cor = COR_PADRAO;
-            setPreferredSize(new Dimension(43, 58));
+            setPreferredSize(new Dimension(42, 52));
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             
             addMouseListener(new java.awt.event.MouseAdapter() {

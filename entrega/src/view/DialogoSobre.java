@@ -4,6 +4,13 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+/*
+Matheus Cardoso de Araújo 24.1.4033
+Pedro Souza Goularte 24.2.4084
+Pedro Henrique Boseja Carolino Barbosa 24.2.4092
+David Cristian de Paula Rodrigues 24.2.4094
+ */
+
 /**
  * Diálogo "Sobre" ULTRA MODERNO - Tema escuro
  */

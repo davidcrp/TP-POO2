@@ -1,13 +1,11 @@
-Aqui está o README completo já formatado em Markdown para você copiar direto:
 
-```md
 # TERMO - Jogo de Adivinhação de Palavras
 
 ## 1. Descrição
 
-Este projeto consiste na implementação completa do jogo **TERMO** (versão em português inspirada no Wordle), desenvolvido em **Java** com interface gráfica utilizando **Swing**.
+Este projeto consiste na implementação completa do jogo **TERMO**, desenvolvido em **Java** com interface gráfica utilizando **Swing**.
 
-O sistema foi estruturado seguindo o padrão arquitetural **MVC (Model-View-Controller)**, garantindo separação clara entre regras de negócio, controle da aplicação e interface gráfica.
+O sistema foi estruturado seguindo o padrão arquitetural **MVC**
 
 ---
 

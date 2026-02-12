@@ -5,6 +5,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
+/*
+Matheus Cardoso de Araújo 24.1.4033
+Pedro Souza Goularte 24.2.4084
+Pedro Henrique Boseja Carolino Barbosa 24.2.4092
+David Cristian de Paula Rodrigues 24.2.4094
+ */
+
 // representa uma partida individual do jogo termo
 // controla palavra secreta, tentativas, letras usadas e estado da partida
 public class Partida {

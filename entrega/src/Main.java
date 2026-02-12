@@ -1,21 +1,24 @@
 import controller.ControladorJogo;
+import controller.GerenciadorUsuarios;
+import view.DialogoLogin;
 import view.JanelaPrincipal;
 
 import javax.swing.*;
 import java.io.IOException;
 
-/**
- * Classe Main - Ponto de entrada do jogo TERMO
- * 
- * Esta classe contém o método main que inicia o jogo.
- * Recebe o caminho do arquivo de palavras como argumento de linha de comando.
- * 
- * Uso: java Main <caminho_arquivo_palavras>
- * Exemplo: java Main resources/palavras.txt
- * 
- * @author [Seu Nome]
- * @version 1.0
+
+/*
+Matheus Cardoso de Araújo 24.1.4033
+Pedro Souza Goularte 24.2.4084
+Pedro Henrique Boseja Carolino Barbosa 24.2.4092
+David Cristian de Paula Rodrigues 24.2.4094
  */
+
+
+  //Uso: java Main <caminho_arquivo_palavras>
+  //Exemplo: java Main resources/palavras.txt
+
+ 
 public class Main {
 
     /**
@@ -58,6 +61,7 @@ public class Main {
 
     /**
      * Inicializa o jogo criando o controlador e a interface
+     * Inclui tela de login antes de abrir o jogo
      * 
      * @param caminhoArquivo Caminho do arquivo de palavras
      * @throws IOException Se houver erro ao ler o arquivo
@@ -66,6 +70,7 @@ public class Main {
 
         System.out.println("=================================");
         System.out.println("       TERMO - Jogo de Palavras");
+        System.out.println("       Sistema Multi-Usuários");
         System.out.println("=================================");
         System.out.println("Carregando banco de palavras...");
 
@@ -76,6 +81,29 @@ public class Main {
             throw new IOException("Falha ao inicializar o controlador do jogo.");
         }
 
+        System.out.println("Abrindo tela de login...");
+
+        // Exibe tela de login
+        GerenciadorUsuarios gerenciadorUsuarios = controlador.getGerenciadorUsuarios();
+        DialogoLogin dialogoLogin = new DialogoLogin(null, gerenciadorUsuarios);
+        dialogoLogin.setVisible(true);
+
+        // Verifica se o login foi bem-sucedido
+        if (!dialogoLogin.isLoginBemSucedido()) {
+            System.out.println("Login cancelado. Encerrando aplicação.");
+            return;
+        }
+
+        // Login bem-sucedido - exibe informações do jogador
+        String nomeJogador = gerenciadorUsuarios.getJogadorLogado().getNome();
+        System.out.println("Login bem-sucedido: " + nomeJogador);
+
+        // Exibe estatísticas do jogador
+        var estatisticas = gerenciadorUsuarios.getJogadorLogado().getEstatisticas();
+        System.out.println("Jogos: " + estatisticas.getTotalPartidas());
+        System.out.println("Vitórias: " + estatisticas.getPartidasGanhas());
+        System.out.println("Sequência atual: " + estatisticas.getSequenciaAtual());
+
         System.out.println("Criando interface gráfica...");
 
         // Cria e exibe a janela principal
@@ -85,16 +113,28 @@ public class Main {
         System.out.println("Jogo iniciado com sucesso!");
         System.out.println("=================================");
 
-        // Exibe diálogo inicial
+        // Exibe diálogo de boas-vindas personalizado
         int opcao = JOptionPane.showConfirmDialog(
             janela,
-            "Bem-vindo ao TERMO!\n\n" +
-            "Objetivo: Adivinhar a palavra secreta de 5 letras em até 6 tentativas.\n\n" +
-            "Cores:\n" +
-            "• Verde: Letra na posição correta\n" +
-            "• Amarelo: Letra existe, mas em outra posição\n" +
-            "• Cinza: Letra não existe na palavra\n\n" +
-            "Deseja iniciar uma partida agora?",
+            String.format(
+                "Bem-vindo de volta, %s!\n\n" +
+                "Suas Estatísticas:\n" +
+                "• Jogos: %d\n" +
+                "• Vitórias: %d (%.0f%%)\n" +
+                "• Sequência Atual: %d\n" +
+                "• Melhor Sequência: %d\n\n" +
+                "Como Jogar:\n" +
+                "• Verde: Letra na posição correta\n" +
+                "• Amarelo: Letra existe, mas em outra posição\n" +
+                "• Cinza: Letra não existe na palavra\n\n" +
+                "Deseja iniciar uma nova partida agora?",
+                nomeJogador,
+                estatisticas.getTotalPartidas(),
+                estatisticas.getPartidasGanhas(),
+                estatisticas.getPorcentagemVitorias(),
+                estatisticas.getSequenciaAtual(),
+                estatisticas.getMelhorSequencia()
+            ),
             "Bem-vindo ao TERMO!",
             JOptionPane.YES_NO_OPTION,
             JOptionPane.INFORMATION_MESSAGE

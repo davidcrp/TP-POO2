@@ -14,9 +14,13 @@ import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Janela principal COMPLETA - Menu funcionando corretamente
+/*
+Matheus Cardoso de Araújo 24.1.4033
+Pedro Souza Goularte 24.2.4084
+Pedro Henrique Boseja Carolino Barbosa 24.2.4092
+David Cristian de Paula Rodrigues 24.2.4094
  */
+
 public class JanelaPrincipal extends JFrame
         implements ControladorJogo.JogoListener,
                    TecladoVirtual.TecladoListener,
@@ -404,7 +408,7 @@ public class JanelaPrincipal extends JFrame
     @Override
     public void onVitoria(int tentativasUsadas) {
         bloqueado = true;
-        mostrarMensagem("🎉 Parabéns! Você venceu!", new Color(106, 170, 100));
+        mostrarMensagem(" Parabéns! Você venceu!", new Color(106, 170, 100));
 
         SwingUtilities.invokeLater(() -> painelGrade.animarVitoria());
 

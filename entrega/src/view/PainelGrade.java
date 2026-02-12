@@ -3,10 +3,14 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Grade 6x5 PREMIUM - Fundo escuro com contraste perfeito
- * Cantos arredondados nas células
+/*
+Matheus Cardoso de Araújo 24.1.4033
+Pedro Souza Goularte 24.2.4084
+Pedro Henrique Boseja Carolino Barbosa 24.2.4092
+David Cristian de Paula Rodrigues 24.2.4094
  */
+
+
 public class PainelGrade extends JPanel {
 
     private static final int NUM_LINHAS = 6;
@@ -111,12 +115,15 @@ public class PainelGrade extends JPanel {
             for (int j = 0; j < NUM_COLUNAS; j++) {
                 Object letra = palavra.getClass().getMethod("getLetra", int.class).invoke(palavra, j);
                 paineis[linhaAtual][j].setLetraObject(letra);
+
+                paineis[linhaAtual][j].atualizarVisual();
             }
         } catch (Exception e) {
             System.err.println("Aviso: Não foi possível processar palavra - " + e.getMessage());
         }
 
         animarFlip();
+        revalidate();
         repaint();
     }
 

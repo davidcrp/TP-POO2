@@ -5,9 +5,13 @@ import util.ConstantesVisuais;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Diálogo de Ajuda ULTRA MODERNO - Tema escuro
+/*
+Matheus Cardoso de Araújo 24.1.4033
+Pedro Souza Goularte 24.2.4084
+Pedro Henrique Boseja Carolino Barbosa 24.2.4092
+David Cristian de Paula Rodrigues 24.2.4094
  */
+
 public class DialogoAjuda extends JDialog {
 
     public DialogoAjuda(JFrame parent) {
@@ -50,6 +54,13 @@ public class DialogoAjuda extends JDialog {
                 "Após cada tentativa, as letras mudam de cor indicando o resultado.");
 
         adicionarExemploCores(conteudo);
+        
+        adicionarSecao(conteudo,
+            "BARRA SUPERIOR",
+            "?  - Abre esta tela de ajuda\n" +
+            "R  - Reinicia a partida atual\n" +
+            "X  - Fecha o jogo\n" +
+            "i  - Exibe as estatísticas do jogador");
 
         adicionarSecao(conteudo,
                 "ATALHOS",

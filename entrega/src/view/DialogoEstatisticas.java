@@ -6,9 +6,13 @@ import util.ConstantesVisuais;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Diálogo de Estatísticas ULTRA MODERNO - Tema escuro
+/*
+Matheus Cardoso de Araújo 24.1.4033
+Pedro Souza Goularte 24.2.4084
+Pedro Henrique Boseja Carolino Barbosa 24.2.4092
+David Cristian de Paula Rodrigues 24.2.4094
  */
+
 public class DialogoEstatisticas extends JDialog {
 
     private Estatisticas estatisticas;
@@ -59,7 +63,7 @@ public class DialogoEstatisticas extends JDialog {
         lblDistribuicao.setFont(new Font("Arial", Font.BOLD, 16));
         lblDistribuicao.setForeground(Color.WHITE);
         lblDistribuicao.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        
         painel.add(lblDistribuicao);
         painel.add(Box.createVerticalStrut(15));
 

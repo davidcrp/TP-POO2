@@ -1,5 +1,12 @@
 package model;
 
+/*
+Matheus Cardoso de Araújo 24.1.4033
+Pedro Souza Goularte 24.2.4084
+Pedro Henrique Boseja Carolino Barbosa 24.2.4092
+David Cristian de Paula Rodrigues 24.2.4094
+ */
+
 // representa uma letra individual do jogo termo
 // cada letra possui um caractere e um estado visual
 public class Letra {

@@ -4,10 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
-/**
- * Célula individual da grade - DESIGN PREMIUM
- * Cantos arredondados, fundo escuro, bordas suaves
+/*
+Matheus Cardoso de Araújo 24.1.4033
+Pedro Souza Goularte 24.2.4084
+Pedro Henrique Boseja Carolino Barbosa 24.2.4092
+David Cristian de Paula Rodrigues 24.2.4094
  */
+
 public class PainelLetra extends JPanel {
 
     // Estados possíveis
@@ -170,7 +173,7 @@ public class PainelLetra extends JPanel {
         return letraObject;
     }
 
-    public void setLetra(Object letra) {
+public void setLetra(Object letra) {
         this.letraObject = letra;
         
         if (letra == null) {
@@ -179,27 +182,44 @@ public class PainelLetra extends JPanel {
         }
 
         try {
-            // Extrai caractere
-            Object caracterObj = letra.getClass().getMethod("getCaractere").invoke(letra);
+            // 1. Extrai o caractere (ex: 'A', 'G')
+            java.lang.reflect.Method getChar = letra.getClass().getMethod("getCaractere");
+            Object caracterObj = getChar.invoke(letra);
             if (caracterObj instanceof Character) {
                 this.caractere = (Character) caracterObj;
             }
 
-            // Extrai estado
-            Object estadoObj = letra.getClass().getMethod("getEstado").invoke(letra);
-            String estadoStr = estadoObj.toString();
+            // 2. Extrai o estado (ex: Estado.POSICAO_ERRADA)
+            java.lang.reflect.Method getEst = letra.getClass().getMethod("getEstado");
+            Object estObj = getEst.invoke(letra);
             
-            // Remove prefixo enum
-            if (estadoStr.contains(".")) {
-                estadoStr = estadoStr.substring(estadoStr.lastIndexOf(".") + 1);
+            if (estObj != null) {
+                String estadoStr = estObj.toString().toUpperCase();
+                
+                // Limpa o nome caso venha com o prefixo da classe (Ex: "Estado.CORRETA" -> "CORRETA")
+                if (estadoStr.contains(".")) {
+                    estadoStr = estadoStr.substring(estadoStr.lastIndexOf(".") + 1);
+                }
+                
+                // Mapeamento flexível para garantir que a cor amarela/verde funcione
+                if (estadoStr.contains("CORRETA")) {
+                    this.estado = CORRETA;
+                } else if (estadoStr.contains("ERRADA") || estadoStr.contains("INCORRETA")) {
+                    this.estado = POSICAO_ERRADA;
+                } else if (estadoStr.contains("AUSENTE")) {
+                    this.estado = AUSENTE;
+                } else {
+                    this.estado = INDEFINIDO;
+                }
             }
             
-            this.estado = estadoStr;
-            
         } catch (Exception e) {
-            System.err.println("Aviso: Erro ao processar letra - " + e.getMessage());
+            System.err.println("Erro ao processar objeto Letra: " + e.getMessage());
+            // Fallback: tenta usar o toString do objeto como estado
+            this.estado = letra.toString().toUpperCase();
         }
 
+        // Força a atualização do texto no JLabel e a repintura do fundo (cores)
         atualizarVisual();
     }
 
