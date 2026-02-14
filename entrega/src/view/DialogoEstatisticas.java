@@ -11,12 +11,15 @@ Matheus Cardoso de Araújo 24.1.4033
 Pedro Souza Goularte 24.2.4084
 Pedro Henrique Boseja Carolino Barbosa 24.2.4092
 David Cristian de Paula Rodrigues 24.2.4094
- */
+*/
 
+// dialogo que exibe estatisticas do jogador
 public class DialogoEstatisticas extends JDialog {
 
+    // objeto com os dados das estatisticas
     private Estatisticas estatisticas;
 
+    // construtor
     public DialogoEstatisticas(JFrame parent, Estatisticas estatisticas) {
         super(parent, "Estatísticas", true);
 
@@ -30,13 +33,14 @@ public class DialogoEstatisticas extends JDialog {
         criarConteudo();
     }
 
+    // monta toda a interface do dialogo
     private void criarConteudo() {
         JPanel painel = new JPanel();
         painel.setLayout(new BoxLayout(painel, BoxLayout.Y_AXIS));
         painel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
         painel.setBackground(new Color(18, 18, 19));
 
-        // TÍTULO
+        // titulo principal
         JLabel titulo = new JLabel("ESTATÍSTICAS");
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setForeground(Color.WHITE);
@@ -45,7 +49,7 @@ public class DialogoEstatisticas extends JDialog {
         painel.add(titulo);
         painel.add(Box.createVerticalStrut(30));
 
-        // GRID DE ESTATÍSTICAS
+        // grid com estatisticas principais
         JPanel gridStats = new JPanel(new GridLayout(1, 4, 15, 0));
         gridStats.setBackground(new Color(18, 18, 19));
         gridStats.setMaximumSize(new Dimension(440, 100));
@@ -58,34 +62,32 @@ public class DialogoEstatisticas extends JDialog {
         painel.add(gridStats);
         painel.add(Box.createVerticalStrut(40));
 
-        // DISTRIBUIÇÃO DE VITÓRIAS
+        // titulo da distribuicao
         JLabel lblDistribuicao = new JLabel("Distribuição de Vitórias");
         lblDistribuicao.setFont(new Font("Arial", Font.BOLD, 16));
         lblDistribuicao.setForeground(Color.WHITE);
         lblDistribuicao.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
+
         painel.add(lblDistribuicao);
         painel.add(Box.createVerticalStrut(15));
 
+        // grafico de distribuicao
         painel.add(criarGraficoDistribuicao());
         painel.add(Box.createVerticalStrut(40));
 
-        // BOTÃO FECHAR
+        // botao fechar
         JButton btnFechar = new JButton("Fechar") {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                    RenderingHints.VALUE_ANTIALIAS_ON);
-
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(new Color(106, 170, 100));
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
-                
                 g2.dispose();
                 super.paintComponent(g);
             }
         };
-        
+
         btnFechar.setFont(new Font("Arial", Font.BOLD, 15));
         btnFechar.setForeground(Color.WHITE);
         btnFechar.setFocusPainted(false);
@@ -100,6 +102,7 @@ public class DialogoEstatisticas extends JDialog {
         add(painel);
     }
 
+    // cria um card individual de estatistica
     private JPanel criarCardStat(String titulo, String valor) {
         JPanel card = new JPanel();
         card.setLayout(new BorderLayout());
@@ -119,6 +122,7 @@ public class DialogoEstatisticas extends JDialog {
         return card;
     }
 
+    // cria grafico de distribuicao de vitorias
     private JPanel criarGraficoDistribuicao() {
         JPanel painelGrafico = new JPanel();
         painelGrafico.setLayout(new BoxLayout(painelGrafico, BoxLayout.Y_AXIS));
@@ -141,6 +145,7 @@ public class DialogoEstatisticas extends JDialog {
         return painelGrafico;
     }
 
+    // cria uma linha do grafico de distribuicao
     private JPanel criarBarraDistribuicao(int tentativa, int valor) {
         JPanel linha = new JPanel(new BorderLayout(10, 0));
         linha.setBackground(new Color(18, 18, 19));

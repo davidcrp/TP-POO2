@@ -6,7 +6,6 @@ import view.JanelaPrincipal;
 import javax.swing.*;
 import java.io.IOException;
 
-
 /*
 Matheus Cardoso de Araújo 24.1.4033
 Pedro Souza Goularte 24.2.4084
@@ -14,106 +13,125 @@ Pedro Henrique Boseja Carolino Barbosa 24.2.4092
 David Cristian de Paula Rodrigues 24.2.4094
  */
 
-
-  //Uso: java Main <caminho_arquivo_palavras>
-  //Exemplo: java Main resources/palavras.txt
-
- 
+// classe principal do programa
+// ponto de entrada da aplicacao
 public class Main {
 
-    /**
-     * Método principal - ponto de entrada do programa
-     * 
-     * @param args Argumentos de linha de comando
-     *             args[0] deve conter o caminho do arquivo de palavras
-     */
+    // metodo main - onde o programa comeca
     public static void main(String[] args) {
 
-        // Verifica se o argumento foi fornecido
+        // verifica se o caminho do arquivo foi informado
         if (args.length < 1) {
+
             System.err.println("Erro: Caminho do arquivo de palavras não informado!");
             System.err.println("Uso: java Main <caminho_arquivo_palavras>");
             System.err.println("Exemplo: java Main resources/palavras.txt");
-            return;
+
+            return; // encerra o programa
         }
 
+        // pega o caminho do arquivo passado por argumento
         String caminhoArquivo = args[0];
 
-        // Configura Look and Feel para melhor aparência
+        // define o visual da interface com o estilo do sistema operacional
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(
+                UIManager.getSystemLookAndFeelClassName()
+            );
         } catch (Exception e) {
             System.out.println("Usando Look and Feel padrão.");
         }
 
-        // Executa na thread de eventos do Swing
+        // executa a interface na thread correta do swing
         SwingUtilities.invokeLater(() -> {
             try {
                 iniciarJogo(caminhoArquivo);
             } catch (IOException e) {
-                exibirErro("Erro ao carregar o banco de palavras:\n" + e.getMessage());
+                exibirErro("Erro ao carregar o banco de palavras:\n" 
+                        + e.getMessage());
             } catch (Exception e) {
-                exibirErro("Erro inesperado:\n" + e.getMessage());
+                exibirErro("Erro inesperado:\n" 
+                        + e.getMessage());
                 e.printStackTrace();
             }
         });
     }
 
-    /**
-     * Inicializa o jogo criando o controlador e a interface
-     * Inclui tela de login antes de abrir o jogo
-     * 
-     * @param caminhoArquivo Caminho do arquivo de palavras
-     * @throws IOException Se houver erro ao ler o arquivo
-     */
-    private static void iniciarJogo(String caminhoArquivo) throws IOException {
+    // metodo responsavel por inicializar o jogo
+    private static void iniciarJogo(String caminhoArquivo) 
+            throws IOException {
 
+        // mensagens no console
         System.out.println("=================================");
         System.out.println("       TERMO - Jogo de Palavras");
         System.out.println("       Sistema Multi-Usuários");
         System.out.println("=================================");
         System.out.println("Carregando banco de palavras...");
 
-        // Cria o controlador e carrega as palavras
-        ControladorJogo controlador = new ControladorJogo(caminhoArquivo);
+        // cria o controlador e carrega palavras
+        ControladorJogo controlador =
+                new ControladorJogo(caminhoArquivo);
 
+        // verifica se foi inicializado corretamente
         if (!controlador.isInicializado()) {
-            throw new IOException("Falha ao inicializar o controlador do jogo.");
+            throw new IOException(
+                    "Falha ao inicializar o controlador do jogo.");
         }
 
         System.out.println("Abrindo tela de login...");
 
-        // Exibe tela de login
-        GerenciadorUsuarios gerenciadorUsuarios = controlador.getGerenciadorUsuarios();
-        DialogoLogin dialogoLogin = new DialogoLogin(null, gerenciadorUsuarios);
+        // obtém o gerenciador de usuarios
+        GerenciadorUsuarios gerenciadorUsuarios =
+                controlador.getGerenciadorUsuarios();
+
+        // abre dialogo de login
+        DialogoLogin dialogoLogin =
+                new DialogoLogin(null, gerenciadorUsuarios);
+
         dialogoLogin.setVisible(true);
 
-        // Verifica se o login foi bem-sucedido
+        // verifica se login foi cancelado
         if (!dialogoLogin.isLoginBemSucedido()) {
-            System.out.println("Login cancelado. Encerrando aplicação.");
+            System.out.println(
+                    "Login cancelado. Encerrando aplicação.");
             return;
         }
 
-        // Login bem-sucedido - exibe informações do jogador
-        String nomeJogador = gerenciadorUsuarios.getJogadorLogado().getNome();
-        System.out.println("Login bem-sucedido: " + nomeJogador);
+        // login realizado com sucesso
+        String nomeJogador =
+                gerenciadorUsuarios
+                        .getJogadorLogado()
+                        .getNome();
 
-        // Exibe estatísticas do jogador
-        var estatisticas = gerenciadorUsuarios.getJogadorLogado().getEstatisticas();
-        System.out.println("Jogos: " + estatisticas.getTotalPartidas());
-        System.out.println("Vitórias: " + estatisticas.getPartidasGanhas());
-        System.out.println("Sequência atual: " + estatisticas.getSequenciaAtual());
+        System.out.println("Login bem-sucedido: " 
+                + nomeJogador);
+
+        // pega estatisticas do jogador
+        var estatisticas =
+                gerenciadorUsuarios
+                        .getJogadorLogado()
+                        .getEstatisticas();
+
+        // imprime estatisticas no console
+        System.out.println("Jogos: " 
+                + estatisticas.getTotalPartidas());
+        System.out.println("Vitórias: " 
+                + estatisticas.getPartidasGanhas());
+        System.out.println("Sequência atual: " 
+                + estatisticas.getSequenciaAtual());
 
         System.out.println("Criando interface gráfica...");
 
-        // Cria e exibe a janela principal
-        JanelaPrincipal janela = new JanelaPrincipal(controlador);
+        // cria janela principal do jogo
+        JanelaPrincipal janela =
+                new JanelaPrincipal(controlador);
+
         janela.setVisible(true);
 
         System.out.println("Jogo iniciado com sucesso!");
         System.out.println("=================================");
 
-        // Exibe diálogo de boas-vindas personalizado
+        // mostra mensagem de boas vindas personalizada
         int opcao = JOptionPane.showConfirmDialog(
             janela,
             String.format(
@@ -140,18 +158,17 @@ public class Main {
             JOptionPane.INFORMATION_MESSAGE
         );
 
+        // se usuario quiser iniciar nova partida
         if (opcao == JOptionPane.YES_OPTION) {
             controlador.iniciarNovaPartida();
         }
     }
 
-    /**
-     * Exibe uma mensagem de erro em diálogo
-     * 
-     * @param mensagem Mensagem de erro
-     */
+    // metodo que exibe dialogo de erro
     private static void exibirErro(String mensagem) {
+
         System.err.println(mensagem);
+
         JOptionPane.showMessageDialog(
             null,
             mensagem,

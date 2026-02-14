@@ -10,14 +10,16 @@ Matheus Cardoso de Araújo 24.1.4033
 Pedro Souza Goularte 24.2.4084
 Pedro Henrique Boseja Carolino Barbosa 24.2.4092
 David Cristian de Paula Rodrigues 24.2.4094
- */
+*/
 
+// dialogo que mostra as instrucoes do jogo
 public class DialogoAjuda extends JDialog {
 
+    // construtor
     public DialogoAjuda(JFrame parent) {
         super(parent, "Como Jogar", true);
 
-        setSize(520, 650);  // Aumentado de 600 para 650
+        setSize(520, 650);
         setLocationRelativeTo(parent);
         setResizable(false);
         getContentPane().setBackground(new Color(18, 18, 19));
@@ -25,24 +27,25 @@ public class DialogoAjuda extends JDialog {
         criarConteudo();
     }
 
+    // monta toda a interface da ajuda
     private void criarConteudo() {
-        JPanel container = new JPanel();
-        container.setLayout(new BorderLayout());
+
+        JPanel container = new JPanel(new BorderLayout());
         container.setBackground(new Color(18, 18, 19));
         container.setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
 
-        // TÍTULO
+        // titulo principal
         JLabel titulo = new JLabel("COMO JOGAR", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 26));
         titulo.setForeground(Color.WHITE);
         titulo.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
         container.add(titulo, BorderLayout.NORTH);
 
-        // CONTEÚDO
+        // painel interno com as secoes
         JPanel conteudo = new JPanel();
         conteudo.setLayout(new BoxLayout(conteudo, BoxLayout.Y_AXIS));
         conteudo.setBackground(new Color(18, 18, 19));
-        conteudo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0)); // Padding adicional
+        conteudo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
         adicionarSecao(conteudo,
                 "OBJETIVO",
@@ -54,13 +57,13 @@ public class DialogoAjuda extends JDialog {
                 "Após cada tentativa, as letras mudam de cor indicando o resultado.");
 
         adicionarExemploCores(conteudo);
-        
+
         adicionarSecao(conteudo,
-            "BARRA SUPERIOR",
-            "?  - Abre esta tela de ajuda\n" +
-            "R  - Reinicia a partida atual\n" +
-            "X  - Fecha o jogo\n" +
-            "i  - Exibe as estatísticas do jogador");
+                "BARRA SUPERIOR",
+                "?  - Abre esta tela de ajuda\n" +
+                "R  - Reinicia a partida atual\n" +
+                "X  - Fecha o jogo\n" +
+                "i  - Exibe as estatísticas do jogador");
 
         adicionarSecao(conteudo,
                 "ATALHOS",
@@ -75,6 +78,7 @@ public class DialogoAjuda extends JDialog {
                 "Aproveite as informações das tentativas anteriores.\n" +
                 "Observe o teclado virtual para acompanhar letras usadas.");
 
+        // scroll para permitir rolagem
         JScrollPane scroll = new JScrollPane(conteudo);
         scroll.setBorder(null);
         scroll.setBackground(new Color(18, 18, 19));
@@ -83,22 +87,19 @@ public class DialogoAjuda extends JDialog {
 
         container.add(scroll, BorderLayout.CENTER);
 
-        // BOTÃO
+        // botao fechar
         JButton btnFechar = new JButton("Entendi") {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                    RenderingHints.VALUE_ANTIALIAS_ON);
-
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(new Color(106, 170, 100));
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
-                
                 g2.dispose();
                 super.paintComponent(g);
             }
         };
-        
+
         btnFechar.setFont(new Font("Arial", Font.BOLD, 15));
         btnFechar.setForeground(Color.WHITE);
         btnFechar.setFocusPainted(false);
@@ -117,12 +118,14 @@ public class DialogoAjuda extends JDialog {
         add(container);
     }
 
+    // adiciona uma secao com titulo e texto
     private void adicionarSecao(JPanel painel, String titulo, String texto) {
+
         JLabel lblTitulo = new JLabel(titulo);
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 15));
         lblTitulo.setForeground(new Color(106, 170, 100));
         lblTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        lblTitulo.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0)); // Espaço antes do título
+        lblTitulo.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0));
 
         JTextArea areaTexto = new JTextArea(texto);
         areaTexto.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -132,13 +135,15 @@ public class DialogoAjuda extends JDialog {
         areaTexto.setLineWrap(true);
         areaTexto.setWrapStyleWord(true);
         areaTexto.setAlignmentX(Component.LEFT_ALIGNMENT);
-        areaTexto.setBorder(BorderFactory.createEmptyBorder(5, 0, 18, 0)); // Mais espaço após o texto
+        areaTexto.setBorder(BorderFactory.createEmptyBorder(5, 0, 18, 0));
 
         painel.add(lblTitulo);
         painel.add(areaTexto);
     }
 
+    // adiciona exemplos visuais das cores
     private void adicionarExemploCores(JPanel painel) {
+
         JLabel titulo = new JLabel("SIGNIFICADO DAS CORES");
         titulo.setFont(new Font("Arial", Font.BOLD, 15));
         titulo.setForeground(new Color(106, 170, 100));
@@ -154,7 +159,9 @@ public class DialogoAjuda extends JDialog {
         painel.add(Box.createVerticalStrut(20));
     }
 
+    // cria uma linha com exemplo de cor
     private JPanel criarLinhaCor(String letra, Color cor, String descricao) {
+
         JPanel linha = new JPanel(new FlowLayout(FlowLayout.LEFT));
         linha.setBackground(new Color(18, 18, 19));
         linha.setAlignmentX(Component.LEFT_ALIGNMENT);

@@ -55,26 +55,36 @@ O projeto segue o padrão **MVC**, organizado da seguinte forma:
 
 src/
 ├── Main.java
+│
+├── controller/
+│   ├── ControladorJogo.java
+│   └── GerenciadorUsuarios.java
+│
 ├── model/
+│   ├── BancoPalavras.java
+│   ├── Estatisticas.java
+│   ├── Jogador.java
 │   ├── Letra.java
 │   ├── Palavra.java
-│   ├── Partida.java
-│   ├── Estatisticas.java
-│   └── BancoPalavras.java
-├── controller/
-│   └── ControladorJogo.java
+│   └── Partida.java
+│
 ├── view/
+│   ├── DialogoAjuda.java
+│   ├── DialogoEstatisticas.java
+│   ├── DialogoLogin.java
+│   ├── DialogoPerfil.java
+│   ├── DialogoSobre.java
 │   ├── JanelaPrincipal.java
 │   ├── MenuPrincipal.java
+│   ├── PainelEstatisticas.java
 │   ├── PainelGrade.java
 │   ├── PainelLetra.java
-│   ├── TecladoVirtual.java
-│   ├── DialogoEstatisticas.java
-│   ├── DialogoAjuda.java
-│   └── DialogoSobre.java
+│   └── TecladoVirtual.java
+│
 └── util/
-├── ConstantesVisuais.java
-└── GerenciadorArquivos.java
+    ├── ConstantesVisuais.java
+    └── GerenciadorArquivos.java
+
 
 ````
 
@@ -113,7 +123,7 @@ Classes auxiliares para persistência e constantes visuais.
 No terminal, execute:
 
 ```bash
-javac -d bin src/**/*.java
+javac -d bin -sourcepath src src/Main.java
 ````
 
 ---
