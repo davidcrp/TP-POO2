@@ -1,0 +1,9 @@
+# Compilados
+*.class
+entrega/bin/
+
+# Dados gerados ao jogar (usuários e estatísticas)
+entrega/dados/
+*.dat
+
+*.zip
